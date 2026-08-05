@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Coral Tribe — lock vs stake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f1ea; --surface:#fffdf9; --ink:#1d1813; --muted:#7d776c;
+  --line:#e4ddd1; --line2:#cfc6b6; --coral:#c4633b; --coral-ink:#8a3d1f;
+  --teal:#1d8a6a; --teal-ink:#0f5b45; --warn:#a8701a;
+  --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif; --r:10px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;}
+.wrap{max-width:720px;margin:0 auto;padding:28px 20px 48px;}
+h1{font-family:var(--serif);font-weight:500;font-size:26px;margin:0 0 4px;}
+.sub{color:var(--muted);font-size:14px;margin:0 0 28px;}
+label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px;}
+input[type=number]{width:100%;height:38px;padding:0 10px;border:1px solid var(--line2);border-radius:var(--r);background:var(--surface);font:inherit;color:var(--ink);}
+input[type=range]{width:100%;accent-color:var(--coral);}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-bottom:22px;}
+.seg{display:flex;gap:6px;flex-wrap:wrap;}
+.chip,.btn{font:inherit;font-size:13px;padding:6px 11px;border:1px solid var(--line2);border-radius:var(--r);background:var(--surface);color:var(--muted);cursor:pointer;text-align:center;}
+.btn small{display:block;font-size:10px;opacity:.6;margin-top:1px;}
+.btn.active{background:var(--ink);color:var(--surface);border-color:var(--ink);}
+.btn.active small{opacity:.7;}
+.chip:hover,.btn:hover{border-color:var(--ink);}
+#stake{flex-wrap:nowrap;}
+#stake .btn{flex:1;min-width:0;padding:6px 4px;}
+.fund{margin-bottom:24px;}
+.fundtop{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px;}
+.fundtop label{margin:0;white-space:nowrap;}
+.fundout{font-size:15px;font-weight:500;text-align:right;}
+.anchors{font-size:11px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between;}
+.deriv{font-size:12px;color:var(--muted);margin-top:8px;}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:22px;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;}
+.card h3{font-family:var(--sans);font-weight:500;font-size:15px;margin:0 0 12px;}
+.lab{font-size:13px;color:var(--muted);}
+.big{font-size:24px;font-weight:500;margin:2px 0 0;}
+.kv{display:flex;justify-content:space-between;margin-top:10px;font-size:13px;gap:10px;}
+.kv span:first-child{color:var(--muted);}
+.fee{font-size:11px;color:var(--muted);}
+.note{font-size:12px;color:var(--muted);margin-top:10px;}
+.verdict{background:#efe9df;border-radius:var(--r);padding:12px 16px;font-size:14px;line-height:1.6;margin-bottom:18px;}
+.legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-bottom:8px;}
+.legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:6px;}
+.chartbox{position:relative;width:100%;height:250px;}
+.chartbox canvas{width:100%;height:100%;display:block;}
+.foot{font-size:12px;color:var(--muted);margin-top:18px;line-height:1.6;}
+.adv{margin-top:22px;border-top:1px solid var(--line);padding-top:14px;}
+.advhead{font:inherit;font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;gap:6px;}
+.advhead:hover{color:var(--ink);}
+.advgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 18px;margin-top:14px;}
+.advcell .l{font-size:11px;color:var(--muted);}
+.advcell .v{font-size:15px;font-weight:500;}
+.advnote{font-size:11px;color:var(--muted);margin-top:14px;}
+.smp{font-size:10px;color:var(--warn);margin-left:5px;}
+.coral{color:var(--coral-ink)} .tealc{color:var(--teal-ink)} .warn{color:var(--warn)}
+
+/* Mode toggle: simple "just locking" vs full "stake or lock" comparison. */
+.modes{display:flex;gap:8px;margin:0 0 24px;}
+.modes .btn{flex:1;padding:9px 12px;font-size:14px;}
+.modes .btn small{font-size:11px;}
+/* Elements only shown in the full comparison mode. */
+.wrap.mode-simple .compare-only{display:none !important;}
+
+/* Plain-language "how this is calculated" panel (both modes). */
+.breakdown{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:22px;font-size:13px;line-height:1.7;}
+.breakdown h3{font-family:var(--sans);font-weight:500;font-size:14px;margin:0 0 10px;}
+.breakdown .row{color:var(--muted);}
+.breakdown .row b{color:var(--ink);font-weight:500;}
+.breakdown .eq{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);}
+.breakdown .res{color:var(--coral-ink);font-weight:500;white-space:nowrap;}
+.breakdown .split{color:var(--teal-ink);font-weight:500;}
+
+@media (max-width:520px){
+  #stake{flex-wrap:wrap;}
+  #stake .btn{flex:1 1 calc(50% - 3px);}
+  .modes{flex-direction:column;}
+}
+
+/* Desktop: fill the screen instead of sitting in a narrow column. */
+@media (min-width:900px){
+  body{font-size:16px;}
+  .wrap{max-width:1080px;padding:56px 48px 72px;}
+  h1{font-size:36px;margin-bottom:6px;}
+  .sub{font-size:15px;margin-bottom:40px;}
+  .grid{gap:28px;margin-bottom:32px;}
+  .cards{gap:20px;margin-bottom:28px;}
+  .big{font-size:30px;}
+  .card{padding:20px 24px;}
+  .card h3{font-size:16px;}
+  .verdict{font-size:15px;padding:16px 20px;margin-bottom:24px;}
+  .chartbox{height:340px;}
+  .fundout{font-size:16px;}
+}
+
+/* Large / high-res displays: grow with the screen so the tool
+   doesn't become a small island of tiny text on a big monitor. */
+@media (min-width:1600px){
+  body{font-size:19px;}
+  .wrap{max-width:1320px;padding:72px 56px 88px;}
+  h1{font-size:44px;}
+  .sub{font-size:17px;}
+  .big{font-size:36px;}
+  .card h3{font-size:18px;}
+  .verdict{font-size:17px;}
+  .chartbox{height:400px;}
+  .fundout{font-size:19px;}
+  .site-footer__links a{font-size:24px;}
+  .site-footer__logo{width:80px;}
+}
+@media (min-width:2200px){
+  body{font-size:23px;}
+  .wrap{max-width:1640px;padding:88px 64px 104px;}
+  h1{font-size:56px;}
+  .sub{font-size:20px;}
+  .big{font-size:44px;}
+  .card{padding:26px 30px;}
+  .card h3{font-size:22px;}
+  .verdict{font-size:20px;}
+  .chartbox{height:480px;}
+  .fundout{font-size:23px;}
+  .site-footer__links a{font-size:30px;}
+  .site-footer__logo{width:100px;}
+}
+
+/* Black footer band — matches the rest of the site. */
+.site-footer{background:#121212;padding:72px 6vw;display:flex;align-items:center;}
+.site-footer__row{width:100%;display:flex;align-items:flex-end;justify-content:space-between;}
+.site-footer__links{display:flex;flex-direction:column;}
+.site-footer__links a{font-family:Georgia,'Times New Roman',serif;color:#ece9e2;text-decoration:none;font-size:20px;line-height:1.5;letter-spacing:.01em;transition:opacity .3s ease;}
+.site-footer__links a:hover{opacity:.55;}
+.site-footer__logo{width:64px;height:auto;opacity:.85;}
+@media (max-width:520px){
+  .site-footer__links a{font-size:16px;}
+  .site-footer__logo{width:48px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap mode-simple">
+  <h1 id="headline">What could you earn by locking now?</h1>
+
+  <div class="modes" id="modes">
+    <button class="btn active" data-m="simple">I'm just locking now<small>what you'd earn today</small></button>
+    <button class="btn" data-m="compare">Stake or lock?<small>compare over 24 months</small></button>
+  </div>
+
+  <div class="grid">
+    <div>
+      <label>Points you already hold</label>
+      <input type="number" id="pts" value="100000" min="0" step="1000" />
+      <div class="seg" style="margin-top:8px;">
+        <button class="chip" data-v="0">New buyer (0)</button>
+        <button class="chip" data-v="10000">10k</button>
+        <button class="chip" data-v="100000">100k</button>
+        <button class="chip" data-v="1000000">OG (1M)</button>
+      </div>
+    </div>
+    <div class="compare-only">
+      <label>Corals</label>
+      <input type="number" id="corals" value="1" min="1" max="50" step="1" />
+      <label style="margin-top:12px;">How long will you stake</label>
+      <div class="seg" id="stake">
+        <button class="btn" data-k="flex">Flexible<small>3/day</small></button>
+        <button class="btn" data-k="m3">3 months<small>9/day</small></button>
+        <button class="btn" data-k="m6">6 months<small>9/day</small></button>
+        <button class="btn active" data-k="y1">12 months<small>15/day</small></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="fund">
+    <div class="fundtop">
+      <label>Community Fund Deployment</label>
+      <span class="fundout" id="fundOut">$288K · today</span>
+    </div>
+    <div class="anchors"><span>Today $288K</span><span>Fully deployed $507K</span><span>Growth $1M</span></div>
+    <input type="range" id="fund" min="288000" max="1000000" value="288000" step="1000" />
+    <div class="deriv" id="fundDeriv">The fund claims ~$2,705/mo in yield; 40% (~$1,082) goes to holders. Nothing is guaranteed.</div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3 class="coral">Lock now</h3>
+      <div class="lab">USDC per month</div>
+      <div class="big coral" id="aMonthly">$0</div>
+      <div class="kv"><span>Points locked <span class="fee">(after 10% lock fee)</span></span><span id="aLocked">0</span></div>
+      <div class="kv"><span>24-month comparison total</span><span id="aTotal">$0</span></div>
+      <div class="note">Cash starts immediately. Corals frozen 365 days, no new points.</div>
+    </div>
+    <div class="card compare-only">
+      <h3 class="tealc" id="bTitle">Stake 12 months, then lock</h3>
+      <div class="lab">USDC per month, once locked</div>
+      <div class="big tealc" id="bMonthly">$0</div>
+      <div class="kv"><span>Points locked <span class="fee">(after 10% lock fee)</span></span><span id="bLocked">0</span></div>
+      <div class="kv"><span>24-month comparison total</span><span id="bTotal">$0</span></div>
+      <div class="note" id="bNote">No cash for 12 months while points grow. Earn cash when you lock your points.</div>
+    </div>
+  </div>
+
+  <div class="breakdown" id="breakdown"></div>
+
+  <div class="verdict compare-only" id="verdict"></div>
+
+  <div class="legend compare-only">
+    <span><i style="background:#c4633b"></i>Lock now</span>
+    <span><i style="background:#1d8a6a"></i>Stake then lock</span>
+  </div>
+  <div class="chartbox compare-only">
+    <canvas id="lvs" role="img" aria-label="Cumulative USDC over 24 months, locking now versus staking then locking">Cumulative earnings comparison over two years.</canvas>
+  </div>
+
+  <div class="adv">
+    <button class="advhead" id="advToggle" aria-expanded="false">Pool details <span id="advCaret">+</span></button>
+    <div id="advBody" hidden>
+      <div class="advgrid">
+        <div class="advcell"><div class="l">Points in rewards pool</div><div class="v" id="adPool">21,557,825</div></div>
+        <div class="advcell"><div class="l">Gross fund yield / mo</div><div class="v" id="adGross">$2,705</div></div>
+        <div class="advcell"><div class="l">To holders (40%)</div><div class="v" id="adDist">$1,082</div></div>
+        <div class="advcell"><div class="l">Compounded (45%)</div><div class="v" id="adCompound">$1,217</div></div>
+        <div class="advcell"><div class="l">ReFi Hub fee (15%)</div><div class="v" id="adRhFee">$406</div></div>
+        <div class="advcell"><div class="l">Value per 10k points</div><div class="v" id="adPer10k">$0.50</div></div>
+        <div class="advcell"><div class="l">Capital deployed</div><div class="v" id="adDeployed">$288,000</div></div>
+        <div class="advcell"><div class="l">Idle capital</div><div class="v" id="adIdle">$219,000</div></div>
+        <div class="advcell"><div class="l">Expected IRR</div><div class="v" id="adIrr">14%</div></div>
+        <div class="advcell"><div class="l">Latest month paid (Jul '26)</div><div class="v">$888</div></div>
+        <div class="advcell"><div class="l">Total network points<span class="smp">sample</span></div><div class="v">22,906,870</div></div>
+        <div class="advcell"><div class="l">Daily points emitted<span class="smp">sample</span></div><div class="v">59,940</div></div>
+        <div class="advcell"><div class="l">Staked, flexible<span class="smp">sample</span></div><div class="v">324</div></div>
+        <div class="advcell"><div class="l">Staked, 3-month<span class="smp">sample</span></div><div class="v">2,004</div></div>
+        <div class="advcell"><div class="l">Staked, 12-month<span class="smp">sample</span></div><div class="v">2,019</div></div>
+      </div>
+      <div class="advnote">The 45 / 40 / 15 split and the holder distribution are live-derived. Values marked sample are placeholders until the data feed is connected.</div>
+    </div>
+  </div>
+
+  <div class="foot" id="foot">Rate uses the live rewards-pool total of 21,557,825 points and today's ~$1,082 monthly holder distribution (40% of ~$2,705 fund yield), scaled by capital deployed at ~14% IRR. Both connect by API.</div>
+</div>
+
+<!-- Black footer. Standalone site: links point back to the main Coral Tribe site.
+     Update SITE_BASE below if/when the main site moves to a custom domain. -->
+<footer class="site-footer">
+  <div class="site-footer__row">
+    <nav class="site-footer__links" aria-label="Footer">
+      <a href="https://fantastic-dasik-a3eca0.netlify.app/impact.html">Our impact</a>
+      <a href="https://fantastic-dasik-a3eca0.netlify.app/fund.html">Investment fund</a>
+      <a href="https://fantastic-dasik-a3eca0.netlify.app/">Membership</a>
+    </nav>
+    <a href="https://fantastic-dasik-a3eca0.netlify.app/" aria-label="Coral Tribe home">
+      <img
+        class="site-footer__logo"
+        src="assets/images/logo-icon-white.png"
+        alt="Coral Tribe"
+      />
+    </a>
+  </div>
+</footer>
+
+<!-- Local, self-contained. No external CDN script the page depends on. -->
+<script src="calc.js"></script>
+<script src="config.js"></script>
+<script>
+(function(){
+  // ---- live config (with today's-value fallbacks) -------------------------
+  // First paint uses fallbacks synchronously, then loadConfig() swaps in any
+  // live values once they arrive. Either way the page renders immediately.
+  var CFG = CoralConfig.defaultConfig();
+
+  var FULL = CFG.fullyDeployed, GROWTH = CFG.growthCap, MONTHS = CFG.months;
+  var key = 'y1';
+  var mode = 'simple'; // 'simple' = just locking now; 'compare' = stake vs lock
+
+  // ---- formatting ---------------------------------------------------------
+  function money(v){return '$'+Math.round(v).toLocaleString('en-US');}
+  function moneyP(v){return '$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function fmt(v){return Math.round(v).toLocaleString('en-US');}
+  function cap(v){return v>=1000000?'$1M':'$'+Math.round(v/1000)+'K';}
+  function pct(v){return Math.round(v*100)+'%';}
+  function niceStep(x){if(x<=0)return 1;var p=Math.pow(10,Math.floor(Math.log10(x)));var f=x/p;var nf=f<=1?1:f<=2?2:f<=5?5:10;return nf*p;}
+  var el=function(id){return document.getElementById(id);};
+
+  // ---- chart (native canvas, no dependency) -------------------------------
+  var lastA=[], lastB=[];
+  function drawChart(a,b){
+    lastA=a; lastB=b;
+    var cv=el('lvs'), box=cv.parentNode, dpr=window.devicePixelRatio||1;
+    var w=box.clientWidth, h=box.clientHeight;
+    if(!w||!h) return;
+    cv.width=w*dpr; cv.height=h*dpr;
+    var ctx=cv.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
+    var padL=48,padR=12,padT=10,padB=34, plotW=w-padL-padR, plotH=h-padT-padB, n=a.length-1;
+    var maxV=0; for(var i=0;i<a.length;i++){maxV=Math.max(maxV,a[i],b[i]);}
+    var step=niceStep(maxV/4), top=Math.max(step, step*Math.ceil(maxV/step));
+    ctx.font='11px Inter, system-ui, sans-serif'; ctx.fillStyle='#7d776c';
+    ctx.strokeStyle='rgba(0,0,0,0.08)'; ctx.lineWidth=1;
+    ctx.textAlign='right'; ctx.textBaseline='middle';
+    for(var g=0; g<=top+0.001; g+=step){
+      var y=padT+plotH-(g/top)*plotH;
+      ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(w-padR,y); ctx.stroke();
+      ctx.fillText('$'+Math.round(g).toLocaleString('en-US'), padL-6, y);
+    }
+    ctx.textAlign='center'; ctx.textBaseline='top';
+    [0,6,12,18,24].forEach(function(m){ var x=padL+(m/n)*plotW; ctx.fillText(m, x, padT+plotH+6); });
+    ctx.fillText('months', padL+plotW/2, padT+plotH+19);
+    function line(data,color,dash){
+      ctx.beginPath(); ctx.setLineDash(dash||[]); ctx.strokeStyle=color; ctx.lineWidth=2;
+      for(var i=0;i<data.length;i++){ var x=padL+(i/n)*plotW, y=padT+plotH-(data[i]/top)*plotH; i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    line(a,'#c4633b'); line(b,'#1d8a6a',[5,4]);
+  }
+
+  // ---- verdict copy (numbers come from the calc module) -------------------
+  function verdictHTML(v, r){
+    if(v.type==='stake-first'){
+      return '<b>Stake first.</b> With almost no points, locking now pays close to nothing. Staking is how you build a balance worth locking.';
+    }
+    if(v.type==='lock-now'){
+      var added=isFinite(v.addedPct)?v.addedPct.toFixed(1)+'%':'almost nothing';
+      var cross='';
+      if(r&&r.crossoverMonth){
+        var cm=Math.round(r.crossoverMonth);
+        cross = cm<=60
+          ? ' Staking '+v.tierLabel+' would only overtake locking around month '+cm+'.'
+          : ' At this balance, staking '+v.tierLabel+' wouldn’t overtake locking for years.';
+      }
+      return '<b>Lock now.</b> You already hold enough points that locking earns more over two years than staking '+v.tierLabel+'. Staking would add only '+added+' to your balance.'+cross;
+    }
+    return '<b>Close call.</b> Staking '+v.tierLabel+' overtakes locking now around month '+Math.round(v.crossoverMonth)+'. Wait if you can hold; lock now if you want cash sooner.';
+  }
+
+  // ---- "how this is calculated" breakdown (shown in both modes) -----------
+  function breakdownHTML(r, held){
+    return '<h3>How this is calculated</h3>'+
+      '<div class="row">You hold <b>'+fmt(held)+'</b> points → after the 10% lock fee, <b>'+fmt(r.lockedNow)+'</b> are locked.</div>'+
+      '<div class="row eq"><b>'+fmt(r.lockedNow)+'</b> ÷ <b>'+fmt(CFG.totalPoolPoints)+'</b> pool points × <b>'+money(r.monthlyDistribution)+'</b>/mo = <span class="res">'+moneyP(r.monthlyNow)+' / month</span></div>'+
+      '<div class="row eq">Where that comes from: the fund claims ~<b>'+money(r.grossYieldMonthly)+'</b>/mo in yield → <span class="split">40% to holders = '+money(r.monthlyDistribution)+'</span> (45% compounds, 15% ReFi Hub).</div>'+
+      '<div class="row" style="margin-top:8px;">Locking pays cash but doesn’t grow your points — only staking adds points.</div>';
+  }
+
+  // ---- render -------------------------------------------------------------
+  function compute(){
+    var inputs={
+      heldPoints: parseFloat(el('pts').value),
+      corals: parseFloat(el('corals').value),
+      tier: key,
+      capitalDeployed: parseFloat(el('fund').value)||CFG.baseCap
+    };
+    var r=CoralCalc.computeRewards(inputs, CFG);
+    var deployed=r.capitalDeployed;
+
+    el('aMonthly').textContent=moneyP(r.monthlyNow);
+    el('aLocked').textContent=fmt(r.lockedNow);
+    el('aTotal').textContent=money(r.totalNow);
+    el('bMonthly').textContent=moneyP(r.monthlyLater);
+    el('bLocked').textContent=fmt(r.lockedLater);
+    el('bTotal').textContent=money(r.totalLater);
+    el('bTitle').textContent='Stake '+r.tierLabel+', then lock';
+    el('bNote').textContent=(key==='flex'?'Flexible staking (3/day), unstake anytime. ':'')+'No cash for '+r.stakeMonths+' months while points grow. Earn cash when you lock your points.';
+
+    var spec=deployed>FULL;
+    var zone=deployed<=CFG.baseCap+500?'today':(spec?'speculative':(deployed>=FULL-500&&deployed<=FULL+500?'fully deployed':'deploying'));
+    el('fundOut').textContent=cap(deployed)+' · '+zone;
+    el('fundOut').className='fundout'+(spec?' warn':'');
+    el('fundDeriv').textContent='The fund claims ~'+money(r.grossYieldMonthly)+'/mo in yield; 40% ('+money(r.monthlyDistribution)+') goes to holders. Nothing is guaranteed.';
+
+    // plain-language breakdown (both modes)
+    el('breakdown').innerHTML=breakdownHTML(r, inputs.heldPoints);
+
+    // advanced view: live-derivable cells
+    el('adPool').textContent=fmt(CFG.totalPoolPoints);
+    el('adGross').textContent=money(r.grossYieldMonthly);
+    el('adDist').textContent=money(r.monthlyDistribution);
+    el('adCompound').textContent=money(r.compound);
+    el('adRhFee').textContent=money(r.rhFee);
+    el('adPer10k').textContent=moneyP(r.ratePer10k);
+    el('adDeployed').textContent=money(deployed);
+    el('adIdle').textContent=money(r.idleCapital);
+    el('adIrr').textContent=pct(CFG.irr);
+
+    drawChart(r.lockNowSeries, r.stakeLockSeries);
+    el('verdict').innerHTML=verdictHTML(r.verdict, r);
+  }
+
+  // Refresh fixed labels that depend on config (after live load may change them).
+  function syncConfigChrome(){
+    FULL=CFG.fullyDeployed; GROWTH=CFG.growthCap; MONTHS=CFG.months;
+    el('fund').min=CFG.baseCap;
+    el('fund').max=CFG.growthCap;
+    var holderToday=CFG.baseGrossMonthly*CFG.holderShare;
+    el('foot').textContent='Rate uses the live rewards-pool total of '+fmt(CFG.totalPoolPoints)+' points and today’s ~'+money(holderToday)+' monthly holder distribution (40% of ~'+money(CFG.baseGrossMonthly)+' fund yield), scaled by capital deployed at ~'+pct(CFG.irr)+' IRR. Both connect by API.';
+  }
+
+  // Switch between "just locking" (simple) and "stake or lock?" (compare) views.
+  function setMode(m){
+    mode=m;
+    var wrap=document.querySelector('.wrap');
+    wrap.classList.toggle('mode-simple', m==='simple');
+    wrap.classList.toggle('mode-compare', m==='compare');
+    el('headline').textContent = m==='simple'
+      ? 'What could you earn by locking now?'
+      : 'Lock now, or keep staking?';
+    document.querySelectorAll('#modes .btn').forEach(function(b){
+      b.classList.toggle('active', b.getAttribute('data-m')===m);
+    });
+    compute();
+  }
+
+  // ---- wiring -------------------------------------------------------------
+  document.querySelectorAll('#modes .btn').forEach(function(b){b.addEventListener('click',function(){setMode(b.getAttribute('data-m'));});});
+  document.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){el('pts').value=c.getAttribute('data-v');compute();});});
+  document.querySelectorAll('#stake .btn').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#stake .btn').forEach(function(x){x.classList.remove('active');});b.classList.add('active');key=b.getAttribute('data-k');compute();});});
+  ['pts','corals','fund'].forEach(function(id){el(id).addEventListener('input',compute);});
+  el('advToggle').addEventListener('click',function(){
+    var body=el('advBody'), open=body.hasAttribute('hidden');
+    if(open){body.removeAttribute('hidden');el('advCaret').textContent='–';this.setAttribute('aria-expanded','true');}
+    else{body.setAttribute('hidden','');el('advCaret').textContent='+';this.setAttribute('aria-expanded','false');}
+  });
+  window.addEventListener('resize',function(){drawChart(lastA,lastB);});
+
+  // first paint from fallbacks, then upgrade with live data if any feeds resolve
+  syncConfigChrome();
+  compute();
+  CoralConfig.loadConfig().then(function(live){
+    CFG=live;
+    syncConfigChrome();
+    compute();
+  });
+})();
+</script>
+</body>
+</html>
