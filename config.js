@@ -7,8 +7,9 @@
  * file://). Nothing here can kill the page — every fetch is wrapped and the
  * fallback is used on any failure.
  *
- * To go live: set the matching URL in ENDPOINTS and have it return JSON whose
- * shape is described next to each one. Until then the fallbacks are authoritative.
+ * To go live: set FEED_URL to a JSON endpoint (a Google Apps Script web app that
+ * reads the finance sheet — see data-feed/README.md). Until then the fallbacks are
+ * authoritative.
  */
 (function (root) {
   'use strict';
@@ -35,14 +36,15 @@
     compoundShare: 0.45    // compounded back into the fund
   };
 
-  // Set these to real URLs when the feeds exist. null = use fallback, no network call.
-  // Each endpoint should return JSON; the reader pulls the field named below.
-  var ENDPOINTS = {
-    totalPoolPoints: null,     // -> { lockedPoints: <number> }
-    grossMonthly: null,        // -> { grossMonthly: <number> } total fund yield/mo (pre-split)
-    capitalDeployed: null,     // -> { deployed: <number> }
-    irr: null                  // -> { irr: <number, e.g. 0.14> }
-  };
+  // Single JSON feed for the live values — a Google Apps Script web app that reads
+  // the "CalcFeed" tab in the finance sheet (see data-feed/README.md). Empty string
+  // = no network call, use the fallbacks above. The feed may return any of these
+  // fields; whatever it omits keeps its fallback, so a partial or failed feed can
+  // never break the page:
+  //   { grossMonthly, capitalDeployed, totalPoolPoints, irr }
+  // NOTE: grossMonthly is the total fund yield BEFORE the 45/40/15 split; the
+  // calculator applies the 40% holder share itself.
+  var FEED_URL = '';
 
   function readField(json, key) {
     var map = {
@@ -59,30 +61,24 @@
     return null;
   }
 
-  // Try one endpoint; resolve to its value or null (never reject).
-  function fetchOne(key) {
-    var url = ENDPOINTS[key];
-    if (!url || typeof fetch === 'undefined') return Promise.resolve(null);
-    return fetch(url)
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (json) { return readField(json, key); })
-      .catch(function () { return null; });
-  }
-
   /*
-   * loadConfig() -> Promise<config>. Always resolves. Any value that fails to
-   * load falls back to TODAY's figure. The resolved object is ready to hand to
-   * CoralCalc.computeRewards as its config, plus the slider anchors.
+   * loadConfig() -> Promise<config>. Always resolves. Fetches the single feed once;
+   * any field the feed omits or that fails to load falls back to TODAY's figure.
+   * The resolved object is ready to hand to CoralCalc.computeRewards, plus anchors.
    */
   function loadConfig() {
-    var keys = ['totalPoolPoints', 'grossMonthly', 'capitalDeployed', 'irr'];
-    return Promise.all(keys.map(fetchOne)).then(function (results) {
-      var live = {};
-      keys.forEach(function (k, i) {
-        live[k] = results[i] != null ? results[i] : FALLBACK[k];
+    if (!FEED_URL || typeof fetch === 'undefined') return Promise.resolve(defaultConfig());
+    return fetch(FEED_URL)
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .catch(function () { return {}; })
+      .then(function (json) {
+        var live = {};
+        ['totalPoolPoints', 'grossMonthly', 'capitalDeployed', 'irr'].forEach(function (k) {
+          var v = readField(json, k);
+          live[k] = (v != null) ? v : FALLBACK[k];
+        });
+        return buildConfig(live);
       });
-      return buildConfig(live);
-    });
   }
 
   // Synchronous build from the fallbacks — used for first paint before any fetch.
@@ -115,7 +111,7 @@
   var api = {
     FALLBACK: FALLBACK,
     CONSTANTS: CONSTANTS,
-    ENDPOINTS: ENDPOINTS,
+    FEED_URL: FEED_URL,
     loadConfig: loadConfig,
     defaultConfig: defaultConfig
   };
