@@ -69,35 +69,39 @@ input[type=range]{width:100%;accent-color:var(--coral);}
 /* Elements only shown in the full comparison mode. */
 .wrap.mode-simple .compare-only{display:none !important;}
 
-/* Plain-language "how this is calculated" panel (both modes). */
-.breakdown{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:22px;font-size:13px;line-height:1.7;}
-.breakdown h3{font-family:var(--sans);font-weight:500;font-size:14px;margin:0 0 10px;}
+/* One consistent section title — same size & font as the subheading. */
+.stitle{font-family:var(--serif);font-size:18px;font-weight:400;color:var(--ink);}
+label.stitle{margin-bottom:8px;}
+
+/* Brand header: logo + title + subheading + intro, centered. */
+.brandhead{text-align:center;margin-bottom:22px;}
+.brandhead .logo{height:48px;width:auto;margin:0 auto 16px;display:block;}
+.brandhead h1{margin:0 0 6px;}
+.brandhead .subhead{font-family:var(--serif);font-size:18px;color:var(--ink);margin:0 0 14px;}
+.brandhead .intro{font-size:14px;color:var(--muted);line-height:1.65;max-width:56ch;margin:0 auto;}
+.intro-link{text-align:center;font-size:14px;color:var(--muted);line-height:1.65;max-width:56ch;margin:12px auto 0;}
+.intro-link a{color:var(--ink);text-decoration:underline;text-underline-offset:2px;}
+.intro-link a:hover{color:var(--coral-ink);}
+
+/* Collapsible sections + one consistent toggle header (info icon beside title). */
+.info{margin:0 0 22px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:16px 18px;}
+.stoggle{display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:0;cursor:pointer;text-align:left;font:inherit;}
+.stoggle .infoicon{width:17px;height:17px;color:var(--muted);flex:none;transition:color .15s ease;}
+.stoggle:hover .stitle{color:var(--coral-ink);}
+.stoggle:hover .infoicon,.stoggle[aria-expanded="true"] .infoicon{color:var(--coral);}
+.info-body{margin-top:12px;font-size:14px;line-height:1.7;color:var(--muted);}
+.info-body b{color:var(--ink);font-weight:500;}
+.info-body ul{margin:8px 0;padding-left:18px;}
+.info-body li{margin:3px 0;}
+.info-body .disc{font-style:italic;margin-top:8px;display:block;}
+
+/* "How this is calculated" content (now inside a toggle). */
+.breakdown{font-size:14px;line-height:1.7;}
 .breakdown .row{color:var(--muted);}
 .breakdown .row b{color:var(--ink);font-weight:500;}
 .breakdown .eq{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);}
 .breakdown .res{color:var(--coral-ink);font-weight:500;white-space:nowrap;}
 .breakdown .split{color:var(--teal-ink);font-weight:500;}
-
-/* Brand header: logo + title + subheading + intro, centered. */
-.brandhead{text-align:center;margin-bottom:24px;}
-.brandhead .logo{height:48px;width:auto;margin:0 auto 16px;display:block;}
-.brandhead h1{margin:0 0 6px;}
-.brandhead .subhead{font-family:var(--serif);font-size:18px;color:var(--ink);margin:0 0 14px;}
-.brandhead .intro{font-size:13px;color:var(--muted);line-height:1.65;max-width:56ch;margin:0 auto;}
-
-/* Collapsible info sections (reuse .advhead styling for the header). */
-.info{margin:0 0 22px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px 16px;}
-.info .advhead{width:100%;justify-content:space-between;font-size:14px;color:var(--ink);}
-.info-body{margin-top:12px;font-size:13px;line-height:1.7;color:var(--muted);}
-.info-body b{color:var(--ink);font-weight:500;}
-.info-body ul{margin:8px 0;padding-left:18px;}
-.info-body li{margin:3px 0;}
-.info-body .disc{font-style:italic;margin-top:8px;display:block;}
-.caret{margin-left:8px;}
-
-/* Primary action button (Visit ReFi Hub Staking). */
-.cta{display:inline-block;margin-top:12px;background:var(--coral);color:#fff;border:none;border-radius:var(--r);padding:10px 16px;font:inherit;font-size:14px;font-weight:500;text-decoration:none;text-align:center;cursor:pointer;}
-.cta:hover{background:var(--coral-ink);}
 
 /* "Recommendation" label above the verdict. */
 .reclabel{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px;}
@@ -174,25 +178,27 @@ input[type=range]{width:100%;accent-color:var(--coral);}
     <h1>Coral Tribe Points Calculator</h1>
     <div class="subhead">Lock your corals now, or keep staking?</div>
     <p class="intro">Staking your corals earns you points. Points earn you cash gifts. Lock your Coral NFT with points in the rewards pool to start earning your cash gifts.</p>
+    <p class="intro-link">For staking and rewards, <a href="https://app.refihub.io/community/" target="_blank" rel="noopener">Visit ReFi Hub</a> and connect your wallet holding your Coral NFTs.</p>
   </header>
 
   <section class="info">
-    <button class="advhead" aria-controls="fundInfoBody" aria-expanded="false">What our fund invests in <span class="caret">+</span></button>
+    <button class="stoggle" aria-controls="fundInfoBody" aria-expanded="false">
+      <span class="stitle">What our fund invests in</span>
+      <svg class="infoicon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="6.3" r="1.1" fill="currentColor"/><rect x="9" y="8.6" width="2" height="6" rx="1" fill="currentColor"/></svg>
+    </button>
     <div class="info-body" id="fundInfoBody" hidden>
       <p>Coral Tribe has an impact fund that primarily invests via ReFi Hub, a clean energy investment platform. The staking mechanism lives in ReFi Hub.</p>
-      <p>Connect your wallet that holds your corals to stake:</p>
     </div>
-    <a class="cta" href="https://app.refihub.io/community/" target="_blank" rel="noopener">Visit ReFi Hub Staking →</a>
   </section>
 
   <div class="modes" id="modes">
-    <button class="btn active" data-m="simple">I'm locking my corals now<small>what you'd earn today</small></button>
+    <button class="btn active" data-m="simple">I'm locking my corals now<small>What you'd earn today</small></button>
     <button class="btn" data-m="compare">Stake or Lock Corals<small>Compare cash gifts over 24 months</small></button>
   </div>
 
   <div class="grid">
     <div>
-      <label>Points you already hold</label>
+      <label class="stitle">Points you already hold</label>
       <input type="number" id="pts" value="100000" min="0" step="1000" />
       <div class="seg" style="margin-top:8px;">
         <button class="chip" data-v="0">I'm a new member (0 points)</button>
@@ -202,7 +208,7 @@ input[type=range]{width:100%;accent-color:var(--coral);}
       </div>
     </div>
     <div class="compare-only">
-      <label>Corals you already hold</label>
+      <label class="stitle">Corals you already hold</label>
       <input type="number" id="corals" value="1" min="1" max="50" step="1" />
       <label style="margin-top:12px;">How long will you stake</label>
       <div class="seg" id="stake">
@@ -215,13 +221,16 @@ input[type=range]{width:100%;accent-color:var(--coral);}
 
   <div class="fund">
     <div class="fundtop">
-      <label>Community Fund Deployment</label>
+      <label class="stitle">Community Fund Deployment</label>
       <span class="fundout" id="fundOut">$288K · today</span>
     </div>
     <div class="anchors"><span>Today $288K</span><span>Fully deployed $507K</span><span>Growth $1M</span></div>
     <input type="range" id="fund" min="288000" max="1000000" value="288000" step="1000" />
     <div class="info" style="margin-top:14px;">
-      <button class="advhead" aria-controls="fundedBody" aria-expanded="false">How the gifts are funded <span class="caret">+</span></button>
+      <button class="stoggle" aria-controls="fundedBody" aria-expanded="false">
+        <span class="stitle">How the gifts are funded</span>
+        <svg class="infoicon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="6.3" r="1.1" fill="currentColor"/><rect x="9" y="8.6" width="2" height="6" rx="1" fill="currentColor"/></svg>
+      </button>
       <div class="info-body" id="fundedBody" hidden>
         <p>Coral Tribe runs an impact fund that grows through its investments and community sales revenue, with the community voting on how new capital is deployed.</p>
         <p>Each month the fund's returns are split three ways:</p>
@@ -255,7 +264,15 @@ input[type=range]{width:100%;accent-color:var(--coral);}
     </div>
   </div>
 
-  <div class="breakdown" id="breakdown"></div>
+  <section class="info">
+    <button class="stoggle" aria-controls="breakdownBody" aria-expanded="false">
+      <span class="stitle">How this is calculated</span>
+      <svg class="infoicon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="6.3" r="1.1" fill="currentColor"/><rect x="9" y="8.6" width="2" height="6" rx="1" fill="currentColor"/></svg>
+    </button>
+    <div class="info-body" id="breakdownBody" hidden>
+      <div class="breakdown" id="breakdown"></div>
+    </div>
+  </section>
 
   <div class="reclabel compare-only">Recommendation</div>
   <div class="verdict compare-only" id="verdict"></div>
@@ -268,8 +285,11 @@ input[type=range]{width:100%;accent-color:var(--coral);}
     <canvas id="lvs" role="img" aria-label="Cumulative USDC over 24 months, locking now versus staking then locking">Cumulative earnings comparison over two years.</canvas>
   </div>
 
-  <div class="adv">
-    <button class="advhead" aria-controls="advBody" aria-expanded="false">Pool details <span class="caret">+</span></button>
+  <section class="info">
+    <button class="stoggle" aria-controls="advBody" aria-expanded="false">
+      <span class="stitle">Reward Pool details</span>
+      <svg class="infoicon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="6.3" r="1.1" fill="currentColor"/><rect x="9" y="8.6" width="2" height="6" rx="1" fill="currentColor"/></svg>
+    </button>
     <div id="advBody" hidden>
       <div class="advgrid">
         <div class="advcell"><div class="l">Points in rewards pool</div><div class="v" id="adPool">21,557,825</div></div>
@@ -290,7 +310,7 @@ input[type=range]{width:100%;accent-color:var(--coral);}
       </div>
       <div class="advnote">The 45 / 40 / 15 split and the holder distribution are live-derived. Values marked sample are placeholders until the data feed is connected.</div>
     </div>
-  </div>
+  </section>
 
   <div class="foot" id="foot">Rate uses the live rewards-pool total of 21,557,825 points and today's ~$1,082 monthly holder distribution (40% of ~$2,705 fund yield), scaled by capital deployed at ~14% IRR. Both connect by API.</div>
 </div>
@@ -389,8 +409,7 @@ input[type=range]{width:100%;accent-color:var(--coral);}
 
   // ---- "how this is calculated" breakdown (shown in both modes) -----------
   function breakdownHTML(r, held){
-    return '<h3>How this is calculated</h3>'+
-      '<div class="row">You hold <b>'+fmt(held)+'</b> points → after the 10% lock fee, <b>'+fmt(r.lockedNow)+'</b> are locked.</div>'+
+    return '<div class="row">You hold <b>'+fmt(held)+'</b> points → after the 10% lock fee, <b>'+fmt(r.lockedNow)+'</b> are locked.</div>'+
       '<div class="row eq"><b>'+fmt(r.lockedNow)+'</b> ÷ <b>'+fmt(CFG.totalPoolPoints)+'</b> pool points × <b>'+money(r.monthlyDistribution)+'</b>/mo = <span class="res">'+moneyP(r.monthlyNow)+' / month</span></div>'+
       '<div class="row eq">Where that comes from: the fund claims ~<b>'+money(r.grossYieldMonthly)+'</b>/mo in yield → <span class="split">40% to holders = '+money(r.monthlyDistribution)+'</span> (45% compounds, 15% ReFi Hub).</div>'+
       '<div class="row" style="margin-top:8px;">Locking pays cash but doesn’t grow your points — only staking adds points.</div>';
@@ -470,13 +489,14 @@ input[type=range]{width:100%;accent-color:var(--coral);}
   document.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){el('pts').value=c.getAttribute('data-v');compute();});});
   document.querySelectorAll('#stake .btn').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#stake .btn').forEach(function(x){x.classList.remove('active');});b.classList.add('active');key=b.getAttribute('data-k');compute();});});
   ['pts','corals','fund'].forEach(function(id){el(id).addEventListener('input',compute);});
-  // Generic collapsible toggles: any .advhead with aria-controls -> its body.
-  document.querySelectorAll('.advhead[aria-controls]').forEach(function(head){
+  // Generic collapsible toggles: any .stoggle with aria-controls -> its body.
+  // Open/closed state is shown by the info icon colour via [aria-expanded] CSS.
+  document.querySelectorAll('.stoggle[aria-controls]').forEach(function(head){
     head.addEventListener('click',function(){
-      var body=el(head.getAttribute('aria-controls')), caret=head.querySelector('.caret');
+      var body=el(head.getAttribute('aria-controls'));
       var open=body.hasAttribute('hidden');
-      if(open){body.removeAttribute('hidden');if(caret)caret.textContent='–';head.setAttribute('aria-expanded','true');}
-      else{body.setAttribute('hidden','');if(caret)caret.textContent='+';head.setAttribute('aria-expanded','false');}
+      if(open){body.removeAttribute('hidden');head.setAttribute('aria-expanded','true');}
+      else{body.setAttribute('hidden','');head.setAttribute('aria-expanded','false');}
     });
   });
   window.addEventListener('resize',function(){drawChart(lastA,lastB);});
