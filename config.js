@@ -44,7 +44,7 @@
   //   { grossMonthly, capitalDeployed, totalPoolPoints, irr }
   // NOTE: grossMonthly is the total fund yield BEFORE the 45/40/15 split; the
   // calculator applies the 40% holder share itself.
-  var FEED_URL = '';
+  var FEED_URL = 'https://script.google.com/macros/s/AKfycbyT82AHrGh8Z42ja1o9nGECgTcQM-eMkIhtI2uytTwEw0BtFCVN8H1wmm0aak-gaOxz/exec';
 
   function readField(json, key) {
     var map = {
