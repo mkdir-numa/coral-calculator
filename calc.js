@@ -33,7 +33,7 @@
   };
 
   var DEFAULT_CONFIG = {
-    totalPoolPoints: 21557825, // denominator: points LOCKED in the pool, not network total
+    totalPoolPoints: 21695562.31, // denominator: points LOCKED in the pool, not network total
     baseGrossMonthly: 2705,    // total yield the fund claims per month at baseCap (trailing 6-mo actual)
     holderShare: 0.40,         // 40% of each claim is distributed to holders
     rhFeeShare: 0.15,          // 15% to ReFi Hub OpEx

@@ -23,7 +23,7 @@ function near(actual, expected, tol, msg) {
     (msg || '') + ' expected ~' + expected + ', got ' + actual);
 }
 
-var cfg = Config.defaultConfig(); // today: 21,557,825 pts, $2,705 gross/mo, $288K, 40/15/45
+var cfg = Config.defaultConfig(); // today: 21,695,562 pts, $2,705 gross/mo, $288K, 40/15/45
 
 console.log('coral calculator — worked examples (coral-rewards-math.md)');
 
@@ -119,7 +119,7 @@ test('series: lock-now pays from month 1; stake-lock is zero until staking ends'
 });
 
 test('fallback config equals today\'s published figures', function () {
-  assert.strictEqual(cfg.totalPoolPoints, 21557825);
+  assert.strictEqual(cfg.totalPoolPoints, 21695562.31);
   assert.strictEqual(cfg.baseGrossMonthly, 2705);
   assert.strictEqual(cfg.holderShare, 0.40);
   assert.strictEqual(cfg.rhFeeShare, 0.15);

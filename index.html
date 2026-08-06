@@ -140,7 +140,6 @@ label.stitle{margin-bottom:8px;}
   .verdict{font-size:17px;}
   .chartbox{height:400px;}
   .fundout{font-size:19px;}
-  .site-footer__links a{font-size:24px;}
   .site-footer__logo{width:80px;}
 }
 @media (min-width:2200px){
@@ -154,20 +153,16 @@ label.stitle{margin-bottom:8px;}
   .verdict{font-size:20px;}
   .chartbox{height:480px;}
   .fundout{font-size:23px;}
-  .site-footer__links a{font-size:30px;}
   .site-footer__logo{width:100px;}
 }
 
-/* Black footer band — matches the rest of the site. */
-.site-footer{background:#121212;padding:72px 6vw;display:flex;align-items:center;}
-.site-footer__row{width:100%;display:flex;align-items:flex-end;justify-content:space-between;}
-.site-footer__links{display:flex;flex-direction:column;}
-.site-footer__links a{font-family:Georgia,'Times New Roman',serif;color:#ece9e2;text-decoration:none;font-size:20px;line-height:1.5;letter-spacing:.01em;transition:opacity .3s ease;}
-.site-footer__links a:hover{opacity:.55;}
-.site-footer__logo{width:64px;height:auto;opacity:.85;}
+/* Black footer band — just the centered Coral Tribe icon. */
+.site-footer{background:#121212;padding:56px 6vw;display:flex;justify-content:center;align-items:center;}
+.site-footer__logo-link{display:inline-flex;transition:opacity .3s ease;}
+.site-footer__logo-link:hover{opacity:.7;}
+.site-footer__logo{width:72px;height:auto;opacity:1;display:block;}
 @media (max-width:520px){
-  .site-footer__links a{font-size:16px;}
-  .site-footer__logo{width:48px;}
+  .site-footer__logo{width:56px;}
 }
 </style>
 </head>
@@ -239,7 +234,7 @@ label.stitle{margin-bottom:8px;}
           <li><b>40%</b> — paid to holders who lock points in the gifts pool</li>
           <li><b>15%</b> — community fund management fee</li>
         </ul>
-        <p>Right now the fund earns about <b id="fnGross">$2,705</b>/mo; holders receive <b id="fnHolders">$1,082</b> and management <b id="fnMgmt">$406</b>. These move with fund performance.</p>
+        <p>Right now the fund earns about <b id="fnGross">$2,705</b> per month; holders receive <b id="fnHolders">$1,082</b> and management <b id="fnMgmt">$406</b>. These move with fund performance.</p>
         <span class="disc">Returns depend on ReFi Hub's asset performance. Nothing is guaranteed.</span>
       </div>
     </div>
@@ -292,7 +287,7 @@ label.stitle{margin-bottom:8px;}
     </button>
     <div id="advBody" hidden>
       <div class="advgrid">
-        <div class="advcell"><div class="l">Points in rewards pool</div><div class="v" id="adPool">21,557,825</div></div>
+        <div class="advcell"><div class="l">Points in rewards pool</div><div class="v" id="adPool">21,695,562</div></div>
         <div class="advcell"><div class="l">Gross fund yield / mo</div><div class="v" id="adGross">$2,705</div></div>
         <div class="advcell"><div class="l">To holders (40%)</div><div class="v" id="adDist">$1,082</div></div>
         <div class="advcell"><div class="l">Compounded (45%)</div><div class="v" id="adCompound">$1,217</div></div>
@@ -312,26 +307,18 @@ label.stitle{margin-bottom:8px;}
     </div>
   </section>
 
-  <div class="foot" id="foot">Rate uses the live rewards-pool total of 21,557,825 points and today's ~$1,082 monthly holder distribution (40% of ~$2,705 fund yield), scaled by capital deployed at ~14% IRR. Both connect by API.</div>
+  <div class="foot" id="foot">Rate uses the live rewards-pool total of 21,695,562 points and today's ~$1,082 monthly holder distribution (40% of ~$2,705 fund yield), scaled by capital deployed at ~14% IRR. Both connect by API.</div>
 </div>
 
-<!-- Black footer. Standalone site: links point back to the main Coral Tribe site.
-     Update SITE_BASE below if/when the main site moves to a custom domain. -->
+<!-- Black footer: just the centered Coral Tribe icon, linking to the main site. -->
 <footer class="site-footer">
-  <div class="site-footer__row">
-    <nav class="site-footer__links" aria-label="Footer">
-      <a href="https://fantastic-dasik-a3eca0.netlify.app/impact.html">Our impact</a>
-      <a href="https://fantastic-dasik-a3eca0.netlify.app/fund.html">Investment fund</a>
-      <a href="https://fantastic-dasik-a3eca0.netlify.app/">Membership</a>
-    </nav>
-    <a href="https://fantastic-dasik-a3eca0.netlify.app/" aria-label="Coral Tribe home">
-      <img
-        class="site-footer__logo"
-        src="assets/images/logo-icon-white.png"
-        alt="Coral Tribe"
-      />
-    </a>
-  </div>
+  <a class="site-footer__logo-link" href="https://www.coraltribe.io/" target="_blank" rel="noopener" aria-label="Coral Tribe">
+    <img
+      class="site-footer__logo"
+      src="assets/images/logo-icon-white.png"
+      alt="Coral Tribe"
+    />
+  </a>
 </footer>
 
 <!-- Local, self-contained. No external CDN script the page depends on. -->
@@ -410,8 +397,8 @@ label.stitle{margin-bottom:8px;}
   // ---- "how this is calculated" breakdown (shown in both modes) -----------
   function breakdownHTML(r, held){
     return '<div class="row">You hold <b>'+fmt(held)+'</b> points → after the 10% lock fee, <b>'+fmt(r.lockedNow)+'</b> are locked.</div>'+
-      '<div class="row eq"><b>'+fmt(r.lockedNow)+'</b> ÷ <b>'+fmt(CFG.totalPoolPoints)+'</b> pool points × <b>'+money(r.monthlyDistribution)+'</b>/mo = <span class="res">'+moneyP(r.monthlyNow)+' / month</span></div>'+
-      '<div class="row eq">Where that comes from: the fund claims ~<b>'+money(r.grossYieldMonthly)+'</b>/mo in yield → <span class="split">40% to holders = '+money(r.monthlyDistribution)+'</span> (45% compounds, 15% ReFi Hub).</div>'+
+      '<div class="row eq"><b>'+fmt(r.lockedNow)+'</b> ÷ <b>'+fmt(CFG.totalPoolPoints)+'</b> pool points × <b>'+money(r.monthlyDistribution)+'</b> per month = <span class="res">'+moneyP(r.monthlyNow)+' per month</span></div>'+
+      '<div class="row eq">Where that comes from: the fund claims ~<b>'+money(r.grossYieldMonthly)+'</b> per month in yield → <span class="split">40% to holders = '+money(r.monthlyDistribution)+'</span> (45% compounds, 15% ReFi Hub).</div>'+
       '<div class="row" style="margin-top:8px;">Locking pays cash but doesn’t grow your points — only staking adds points.</div>';
   }
 

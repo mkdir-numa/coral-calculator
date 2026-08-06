@@ -16,7 +16,7 @@
 
   // Today's figures. These are the fallbacks AND the initial render values.
   var FALLBACK = {
-    totalPoolPoints: 21557825, // rewards-pool API. Points LOCKED in the pool only,
+    totalPoolPoints: 21695562.31, // rewards-pool API. Points LOCKED in the pool only,
                                // NOT total network points. This is the denominator.
     grossMonthly: 2705,        // total yield the fund CLAIMS per month (trailing 6-mo actual,
                                // on-chain). Holders get 40% of this -> ~$1,082/mo today.
