@@ -78,6 +78,30 @@ input[type=range]{width:100%;accent-color:var(--coral);}
 .breakdown .res{color:var(--coral-ink);font-weight:500;white-space:nowrap;}
 .breakdown .split{color:var(--teal-ink);font-weight:500;}
 
+/* Brand header: logo + title + subheading + intro, centered. */
+.brandhead{text-align:center;margin-bottom:24px;}
+.brandhead .logo{height:48px;width:auto;margin:0 auto 16px;display:block;}
+.brandhead h1{margin:0 0 6px;}
+.brandhead .subhead{font-family:var(--serif);font-size:18px;color:var(--ink);margin:0 0 14px;}
+.brandhead .intro{font-size:13px;color:var(--muted);line-height:1.65;max-width:56ch;margin:0 auto;}
+
+/* Collapsible info sections (reuse .advhead styling for the header). */
+.info{margin:0 0 22px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:14px 16px;}
+.info .advhead{width:100%;justify-content:space-between;font-size:14px;color:var(--ink);}
+.info-body{margin-top:12px;font-size:13px;line-height:1.7;color:var(--muted);}
+.info-body b{color:var(--ink);font-weight:500;}
+.info-body ul{margin:8px 0;padding-left:18px;}
+.info-body li{margin:3px 0;}
+.info-body .disc{font-style:italic;margin-top:8px;display:block;}
+.caret{margin-left:8px;}
+
+/* Primary action button (Visit ReFi Hub Staking). */
+.cta{display:inline-block;margin-top:12px;background:var(--coral);color:#fff;border:none;border-radius:var(--r);padding:10px 16px;font:inherit;font-size:14px;font-weight:500;text-decoration:none;text-align:center;cursor:pointer;}
+.cta:hover{background:var(--coral-ink);}
+
+/* "Recommendation" label above the verdict. */
+.reclabel{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px;}
+
 @media (max-width:520px){
   #stake{flex-wrap:wrap;}
   #stake .btn{flex:1 1 calc(50% - 3px);}
@@ -145,11 +169,25 @@ input[type=range]{width:100%;accent-color:var(--coral);}
 </head>
 <body>
 <div class="wrap mode-simple">
-  <h1 id="headline">What could you earn by locking now?</h1>
+  <header class="brandhead">
+    <img class="logo" src="assets/images/coral-tribe-logotype-black.png" alt="Coral Tribe" />
+    <h1>Coral Tribe Points Calculator</h1>
+    <div class="subhead">Lock your corals now, or keep staking?</div>
+    <p class="intro">Staking your corals earns you points. Points earn you cash gifts. Lock your Coral NFT with points in the rewards pool to start earning your cash gifts.</p>
+  </header>
+
+  <section class="info">
+    <button class="advhead" aria-controls="fundInfoBody" aria-expanded="false">What our fund invests in <span class="caret">+</span></button>
+    <div class="info-body" id="fundInfoBody" hidden>
+      <p>Coral Tribe has an impact fund that primarily invests via ReFi Hub, a clean energy investment platform. The staking mechanism lives in ReFi Hub.</p>
+      <p>Connect your wallet that holds your corals to stake:</p>
+    </div>
+    <a class="cta" href="https://app.refihub.io/community/" target="_blank" rel="noopener">Visit ReFi Hub Staking →</a>
+  </section>
 
   <div class="modes" id="modes">
-    <button class="btn active" data-m="simple">I'm just locking now<small>what you'd earn today</small></button>
-    <button class="btn" data-m="compare">Stake or lock?<small>compare over 24 months</small></button>
+    <button class="btn active" data-m="simple">I'm locking my corals now<small>what you'd earn today</small></button>
+    <button class="btn" data-m="compare">Stake or Lock Corals<small>Compare cash gifts over 24 months</small></button>
   </div>
 
   <div class="grid">
@@ -157,20 +195,19 @@ input[type=range]{width:100%;accent-color:var(--coral);}
       <label>Points you already hold</label>
       <input type="number" id="pts" value="100000" min="0" step="1000" />
       <div class="seg" style="margin-top:8px;">
-        <button class="chip" data-v="0">New buyer (0)</button>
+        <button class="chip" data-v="0">I'm a new member (0 points)</button>
         <button class="chip" data-v="10000">10k</button>
         <button class="chip" data-v="100000">100k</button>
         <button class="chip" data-v="1000000">OG (1M)</button>
       </div>
     </div>
     <div class="compare-only">
-      <label>Corals</label>
+      <label>Corals you already hold</label>
       <input type="number" id="corals" value="1" min="1" max="50" step="1" />
       <label style="margin-top:12px;">How long will you stake</label>
       <div class="seg" id="stake">
         <button class="btn" data-k="flex">Flexible<small>3/day</small></button>
         <button class="btn" data-k="m3">3 months<small>9/day</small></button>
-        <button class="btn" data-k="m6">6 months<small>9/day</small></button>
         <button class="btn active" data-k="y1">12 months<small>15/day</small></button>
       </div>
     </div>
@@ -183,7 +220,20 @@ input[type=range]{width:100%;accent-color:var(--coral);}
     </div>
     <div class="anchors"><span>Today $288K</span><span>Fully deployed $507K</span><span>Growth $1M</span></div>
     <input type="range" id="fund" min="288000" max="1000000" value="288000" step="1000" />
-    <div class="deriv" id="fundDeriv">The fund claims ~$2,705/mo in yield; 40% (~$1,082) goes to holders. Nothing is guaranteed.</div>
+    <div class="info" style="margin-top:14px;">
+      <button class="advhead" aria-controls="fundedBody" aria-expanded="false">How the gifts are funded <span class="caret">+</span></button>
+      <div class="info-body" id="fundedBody" hidden>
+        <p>Coral Tribe runs an impact fund that grows through its investments and community sales revenue, with the community voting on how new capital is deployed.</p>
+        <p>Each month the fund's returns are split three ways:</p>
+        <ul>
+          <li><b>45%</b> — reinvested to grow the fund</li>
+          <li><b>40%</b> — paid to holders who lock points in the gifts pool</li>
+          <li><b>15%</b> — community fund management fee</li>
+        </ul>
+        <p>Right now the fund earns about <b id="fnGross">$2,705</b>/mo; holders receive <b id="fnHolders">$1,082</b> and management <b id="fnMgmt">$406</b>. These move with fund performance.</p>
+        <span class="disc">Returns depend on ReFi Hub's asset performance. Nothing is guaranteed.</span>
+      </div>
+    </div>
   </div>
 
   <div class="cards">
@@ -207,6 +257,7 @@ input[type=range]{width:100%;accent-color:var(--coral);}
 
   <div class="breakdown" id="breakdown"></div>
 
+  <div class="reclabel compare-only">Recommendation</div>
   <div class="verdict compare-only" id="verdict"></div>
 
   <div class="legend compare-only">
@@ -218,7 +269,7 @@ input[type=range]{width:100%;accent-color:var(--coral);}
   </div>
 
   <div class="adv">
-    <button class="advhead" id="advToggle" aria-expanded="false">Pool details <span id="advCaret">+</span></button>
+    <button class="advhead" aria-controls="advBody" aria-expanded="false">Pool details <span class="caret">+</span></button>
     <div id="advBody" hidden>
       <div class="advgrid">
         <div class="advcell"><div class="l">Points in rewards pool</div><div class="v" id="adPool">21,557,825</div></div>
@@ -369,7 +420,11 @@ input[type=range]{width:100%;accent-color:var(--coral);}
     var zone=deployed<=CFG.baseCap+500?'today':(spec?'speculative':(deployed>=FULL-500&&deployed<=FULL+500?'fully deployed':'deploying'));
     el('fundOut').textContent=cap(deployed)+' · '+zone;
     el('fundOut').className='fundout'+(spec?' warn':'');
-    el('fundDeriv').textContent='The fund claims ~'+money(r.grossYieldMonthly)+'/mo in yield; 40% ('+money(r.monthlyDistribution)+') goes to holders. Nothing is guaranteed.';
+
+    // "How the gifts are funded" toggle — live figures
+    el('fnGross').textContent=money(r.grossYieldMonthly);
+    el('fnHolders').textContent=money(r.monthlyDistribution);
+    el('fnMgmt').textContent=money(r.rhFee);
 
     // plain-language breakdown (both modes)
     el('breakdown').innerHTML=breakdownHTML(r, inputs.heldPoints);
@@ -404,9 +459,6 @@ input[type=range]{width:100%;accent-color:var(--coral);}
     var wrap=document.querySelector('.wrap');
     wrap.classList.toggle('mode-simple', m==='simple');
     wrap.classList.toggle('mode-compare', m==='compare');
-    el('headline').textContent = m==='simple'
-      ? 'What could you earn by locking now?'
-      : 'Lock now, or keep staking?';
     document.querySelectorAll('#modes .btn').forEach(function(b){
       b.classList.toggle('active', b.getAttribute('data-m')===m);
     });
@@ -418,10 +470,14 @@ input[type=range]{width:100%;accent-color:var(--coral);}
   document.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){el('pts').value=c.getAttribute('data-v');compute();});});
   document.querySelectorAll('#stake .btn').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#stake .btn').forEach(function(x){x.classList.remove('active');});b.classList.add('active');key=b.getAttribute('data-k');compute();});});
   ['pts','corals','fund'].forEach(function(id){el(id).addEventListener('input',compute);});
-  el('advToggle').addEventListener('click',function(){
-    var body=el('advBody'), open=body.hasAttribute('hidden');
-    if(open){body.removeAttribute('hidden');el('advCaret').textContent='–';this.setAttribute('aria-expanded','true');}
-    else{body.setAttribute('hidden','');el('advCaret').textContent='+';this.setAttribute('aria-expanded','false');}
+  // Generic collapsible toggles: any .advhead with aria-controls -> its body.
+  document.querySelectorAll('.advhead[aria-controls]').forEach(function(head){
+    head.addEventListener('click',function(){
+      var body=el(head.getAttribute('aria-controls')), caret=head.querySelector('.caret');
+      var open=body.hasAttribute('hidden');
+      if(open){body.removeAttribute('hidden');if(caret)caret.textContent='–';head.setAttribute('aria-expanded','true');}
+      else{body.setAttribute('hidden','');if(caret)caret.textContent='+';head.setAttribute('aria-expanded','false');}
+    });
   });
   window.addEventListener('resize',function(){drawChart(lastA,lastB);});
 

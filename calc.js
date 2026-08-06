@@ -25,11 +25,10 @@
 
   // Staking tiers. rate = points per day per Coral; days = staking length;
   // months = how long cash is delayed before the stake-then-lock path pays.
-  // 6 months is the 3-month tier renewed once: same 9/day, run twice as long.
+  // The protocol offers three tiers: Flexible, 3-month, 12-month.
   var TIERS = {
     flex: { ppd: 3,  days: 365, months: 12, label: 'flexibly' },
     m3:   { ppd: 9,  days: 90,  months: 3,  label: '3 months' },
-    m6:   { ppd: 9,  days: 180, months: 6,  label: '6 months' },
     y1:   { ppd: 15, days: 365, months: 12, label: '12 months' }
   };
 

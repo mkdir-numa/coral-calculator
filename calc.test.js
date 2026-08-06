@@ -70,12 +70,6 @@ test('10% lock fee is applied to held points', function () {
   assert.strictEqual(r.lockedNow, 90000);
 });
 
-test('6-month tier = 3-month tier run twice (same 9/day, double the points)', function () {
-  var m3 = Calc.computeRewards({ heldPoints: 0, corals: 1, tier: 'm3' }, cfg);
-  var m6 = Calc.computeRewards({ heldPoints: 0, corals: 1, tier: 'm6' }, cfg);
-  assert.strictEqual(m6.pointsGained, m3.pointsGained * 2);  // 9*90 -> 9*180
-});
-
 test('12-month tier earns more per day than the others (rate jumps at 12mo)', function () {
   var flex = Calc.computeRewards({ heldPoints: 0, corals: 1, tier: 'flex' }, cfg);
   var y1 = Calc.computeRewards({ heldPoints: 0, corals: 1, tier: 'y1' }, cfg);
