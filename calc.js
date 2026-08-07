@@ -40,7 +40,7 @@
     compoundShare: 0.45,       // 45% compounds back into the fund
     baseCap: 288000,           // capital deployed today; anchors the fund slider
     fullyDeployed: 507000,     // idle cash put to work; honest ceiling before "growth"
-    irr: 0.14,                 // reference yield used in copy / advanced view
+    irr: 0.14,                 // display-only fallback; the app derives current yield live (config.js)
     lockFee: 0.10,             // 10% taken off points at lock
     months: 24                 // comparison horizon for the chart and totals
   };

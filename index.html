@@ -297,7 +297,7 @@ label.stitle{margin-bottom:8px;}
         <div class="advcell"><div class="l">Value per 10k points</div><div class="v" id="adPer10k">$0.50</div></div>
         <div class="advcell"><div class="l">Capital deployed</div><div class="v" id="adDeployed">$288,000</div></div>
         <div class="advcell"><div class="l">Idle capital</div><div class="v" id="adIdle">$219,000</div></div>
-        <div class="advcell"><div class="l">Expected IRR</div><div class="v" id="adIrr">14%</div></div>
+        <div class="advcell"><div class="l">Current yield</div><div class="v" id="adIrr">11%</div></div>
         <div class="advcell"><div class="l">Latest month paid (Jul '26)</div><div class="v">$888</div></div>
         <div class="advcell"><div class="l">Total network points<span class="smp">sample</span></div><div class="v">22,906,870</div></div>
         <div class="advcell"><div class="l">Daily points emitted<span class="smp">sample</span></div><div class="v">59,940</div></div>
@@ -309,7 +309,7 @@ label.stitle{margin-bottom:8px;}
     </div>
   </section>
 
-  <div class="foot" id="foot">Rate uses the live rewards-pool total of 21,695,562 points and today's ~$1,082 monthly holder distribution (40% of ~$2,705 fund yield), scaled by capital deployed at ~14% IRR. Both connect by API.</div>
+  <div class="foot" id="foot">Rate uses the live rewards-pool total of 21,695,562 points and today's ~$1,082 monthly holder distribution (40% of ~$2,705 fund yield), scaled by capital deployed at the current ~11% yield. Both connect by API.</div>
 </div>
 
 <!-- Black footer: just the centered Coral Tribe icon, linking to the main site. -->
@@ -458,7 +458,7 @@ label.stitle{margin-bottom:8px;}
     el('fund').min=CFG.baseCap;
     el('fund').max=CFG.growthCap;
     var holderToday=CFG.baseGrossMonthly*CFG.holderShare;
-    el('foot').textContent='Rate uses the live rewards-pool total of '+fmt(CFG.totalPoolPoints)+' points and today’s ~'+money(holderToday)+' monthly holder distribution (40% of ~'+money(CFG.baseGrossMonthly)+' fund yield), scaled by capital deployed at ~'+pct(CFG.irr)+' IRR. Both connect by API.';
+    el('foot').textContent='Rate uses the live rewards-pool total of '+fmt(CFG.totalPoolPoints)+' points and today’s ~'+money(holderToday)+' monthly holder distribution (40% of ~'+money(CFG.baseGrossMonthly)+' fund yield), scaled by capital deployed at the current ~'+pct(CFG.irr)+' yield. Both connect by API.';
   }
 
   // Switch between "just locking" (simple) and "stake or lock?" (compare) views.

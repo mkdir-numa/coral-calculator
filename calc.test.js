@@ -125,7 +125,8 @@ test('fallback config equals today\'s published figures', function () {
   assert.strictEqual(cfg.rhFeeShare, 0.15);
   assert.strictEqual(cfg.compoundShare, 0.45);
   assert.strictEqual(cfg.baseCap, 288000);
-  assert.strictEqual(cfg.irr, 0.14);
+  // irr is derived as grossMonthly*12/capitalDeployed (~11.3%), not a fixed constant
+  assert.strictEqual(cfg.irr, 2705 * 12 / 288000);
 });
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');

@@ -20,8 +20,9 @@
                                // NOT total network points. This is the denominator.
     grossMonthly: 2705,        // total yield the fund CLAIMS per month (trailing 6-mo actual,
                                // on-chain). Holders get 40% of this -> ~$1,082/mo today.
-    capitalDeployed: 288000,   // fund / ReFi Hub. Drives the fund slider's "today" anchor.
-    irr: 0.14                  // fund reference rate; scales distribution with capital.
+    capitalDeployed: 288000    // fund / ReFi Hub. Drives the fund slider's "today" anchor.
+    // (No irr fallback: the current yield is DERIVED as grossMonthly*12/capitalDeployed,
+    //  unless the feed supplies an explicit irr. See buildConfig.)
   };
 
   // Fixed reference points (not live feeds): slider anchors, split, and protocol rules.
@@ -92,7 +93,9 @@
       totalPoolPoints: live.totalPoolPoints,
       grossMonthly: live.grossMonthly,
       capitalDeployed: live.capitalDeployed,
-      irr: live.irr,
+      // Current yield, derived live from the sheet figures (annualised): a feed
+      // may override it by supplying `irr` directly.
+      irr: (live.irr != null) ? live.irr : (live.grossMonthly * 12 / live.capitalDeployed),
       // mapped to the calc module's expected names
       baseCap: live.capitalDeployed,          // today's capital anchors the slider
       baseGrossMonthly: live.grossMonthly,    // gross fund yield at today's capital
