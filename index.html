@@ -6,47 +6,52 @@
 <title>Coral Tribe — lock vs stake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f5f1ea; --surface:#fffdf9; --ink:#1d1813; --muted:#7d776c;
-  --line:#e4ddd1; --line2:#cfc6b6; --coral:#c4633b; --coral-ink:#8a3d1f;
-  --teal:#1d8a6a; --teal-ink:#0f5b45; --warn:#a8701a;
-  --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif; --r:10px;
+  --bg:#ffffff; --surface:#ffffff; --ink:#16120e; --body:#46413a; --muted:#8b857a;
+  --line:#e7e3dc; --line2:#d9d3c8;
+  --blue:#146c93; --blue-ink:#0f5674; --burgundy:#7f0303; --burgundy-ink:#5c0202;
+  --head:'Space Grotesk',system-ui,sans-serif;
+  --mono:'Space Mono',ui-monospace,SFMono-Regular,monospace;
+  --sans:'Inter',system-ui,sans-serif; --r:8px;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);font-size:15px;line-height:1.6;}
 .wrap{max-width:720px;margin:0 auto;padding:28px 20px 48px;}
-h1{font-family:var(--serif);font-weight:500;font-size:26px;margin:0 0 4px;}
+h1{font-family:var(--head);font-weight:600;font-size:26px;letter-spacing:-.01em;color:var(--ink);margin:0 0 4px;}
 .sub{color:var(--muted);font-size:14px;margin:0 0 28px;}
-label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px;}
-input[type=number]{width:100%;height:38px;padding:0 10px;border:1px solid var(--line2);border-radius:var(--r);background:var(--surface);font:inherit;color:var(--ink);}
-input[type=range]{width:100%;accent-color:var(--coral);}
+label{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;}
+input[type=number]{width:100%;height:40px;padding:0 12px;border:1px solid var(--line2);border-radius:var(--r);background:var(--surface);font:inherit;color:var(--ink);}
+input[type=number]:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(20,108,147,.15);}
+input[type=range]{width:100%;accent-color:var(--blue);}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-bottom:22px;}
 .seg{display:flex;gap:6px;flex-wrap:wrap;}
-.chip,.btn{font:inherit;font-size:13px;padding:6px 11px;border:1px solid var(--line2);border-radius:var(--r);background:var(--surface);color:var(--muted);cursor:pointer;text-align:center;}
-.btn small{display:block;font-size:10px;opacity:.6;margin-top:1px;}
-.btn.active{background:var(--ink);color:var(--surface);border-color:var(--ink);}
-.btn.active small{opacity:.7;}
+.chip,.btn{font:inherit;font-size:13px;padding:7px 12px;border:1px solid var(--line2);border-radius:var(--r);background:var(--surface);color:var(--body);cursor:pointer;text-align:center;transition:border-color .12s ease,background .12s ease,color .12s ease;}
+.btn small{display:block;font-size:10px;opacity:.7;margin-top:1px;}
+.btn.active,.chip.active{background:var(--burgundy);color:#fff;border-color:var(--burgundy);}
+.btn.active small{opacity:.85;}
 .chip:hover,.btn:hover{border-color:var(--ink);}
+.btn.active:hover,.chip.active:hover{background:var(--burgundy-ink);border-color:var(--burgundy-ink);}
 #stake{flex-wrap:nowrap;}
-#stake .btn{flex:1;min-width:0;padding:6px 4px;}
+#stake .btn{flex:1;min-width:0;padding:7px 4px;}
 .fund{margin-bottom:24px;}
 .fundtop{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px;}
 .fundtop label{margin:0;white-space:nowrap;}
-.fundout{font-size:15px;font-weight:500;text-align:right;}
-.anchors{font-size:11px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between;}
+.fundout{font-family:var(--mono);font-size:13px;color:var(--ink);text-align:right;}
+.anchors{font-family:var(--mono);font-size:10px;letter-spacing:.03em;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between;}
 .deriv{font-size:12px;color:var(--muted);margin-top:8px;}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:22px;}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;}
-.card h3{font-family:var(--sans);font-weight:500;font-size:15px;margin:0 0 12px;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;}
+.card h3{font-family:var(--head);font-weight:600;font-size:15px;margin:0 0 12px;}
 .lab{font-size:13px;color:var(--muted);}
-.big{font-size:24px;font-weight:500;margin:2px 0 0;}
+.big{font-family:var(--head);font-size:26px;font-weight:600;letter-spacing:-.01em;margin:2px 0 0;color:var(--ink);}
 .kv{display:flex;justify-content:space-between;margin-top:10px;font-size:13px;gap:10px;}
 .kv span:first-child{color:var(--muted);}
 .fee{font-size:11px;color:var(--muted);}
 .note{font-size:12px;color:var(--muted);margin-top:10px;}
-.verdict{background:#efe9df;border-radius:var(--r);padding:12px 16px;font-size:14px;line-height:1.6;margin-bottom:18px;}
+.verdict{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--burgundy);border-radius:var(--r);padding:12px 16px;font-size:14px;line-height:1.6;color:var(--body);margin-bottom:18px;}
+.verdict b{color:var(--ink);}
 .legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-bottom:8px;}
 .legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:6px;}
 .chartbox{position:relative;width:100%;height:250px;}
@@ -56,42 +61,42 @@ input[type=range]{width:100%;accent-color:var(--coral);}
 .advhead{font:inherit;font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;gap:6px;}
 .advhead:hover{color:var(--ink);}
 .advgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 18px;margin-top:14px;}
-.advcell .l{font-size:11px;color:var(--muted);}
-.advcell .v{font-size:15px;font-weight:500;}
+.advcell .l{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);}
+.advcell .v{font-size:15px;font-weight:500;color:var(--ink);}
 .advnote{font-size:11px;color:var(--muted);margin-top:14px;}
-.smp{font-size:10px;color:var(--warn);margin-left:5px;}
-.coral{color:var(--coral-ink)} .tealc{color:var(--teal-ink)} .warn{color:var(--warn)}
+.smp{font-family:var(--mono);font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:var(--burgundy);margin-left:5px;}
+.coral{color:var(--burgundy)} .tealc{color:var(--blue)} .warn{color:var(--burgundy)}
 
 /* Mode toggle: simple "just locking" vs full "stake or lock" comparison. */
 .modes{display:flex;gap:8px;margin:0 0 24px;}
-.modes .btn{flex:1;padding:9px 12px;font-size:14px;}
+.modes .btn{flex:1;padding:11px 12px;font-size:14px;}
 .modes .btn small{font-size:11px;}
 /* Elements only shown in the full comparison mode. */
 .wrap.mode-simple .compare-only{display:none !important;}
 
-/* One consistent section title — same size & font as the subheading. */
-.stitle{font-family:var(--serif);font-size:18px;font-weight:400;color:var(--ink);}
+/* One consistent section title — Space Grotesk, like the subheading. */
+.stitle{font-family:var(--head);font-size:18px;font-weight:500;color:var(--ink);text-transform:none;letter-spacing:normal;}
 label.stitle{margin-bottom:8px;}
 .modes-title{margin:22px 0 12px;}
 
 /* Brand header: logo + title + subheading + intro, centered. */
 .brandhead{text-align:center;margin-bottom:22px;}
-.brandhead .logo{height:48px;width:auto;margin:0 auto 16px;display:block;}
-.brandhead h1{margin:0 0 6px;}
-.brandhead .subhead{font-family:var(--serif);font-size:18px;color:var(--ink);margin:0 0 14px;}
+.brandhead .logo{height:40px;width:auto;margin:0 auto 16px;display:block;}
+.brandhead h1{margin:0 0 8px;}
+.brandhead .subhead{font-family:var(--head);font-size:18px;font-weight:500;color:var(--ink);margin:0 0 14px;}
 .brandhead .intro{font-size:14px;color:var(--muted);line-height:1.65;max-width:56ch;margin:0 auto;}
 .intro-link{text-align:center;font-size:14px;color:var(--muted);line-height:1.65;max-width:56ch;margin:12px auto 0;}
-.intro-link a{color:var(--ink);text-decoration:underline;text-underline-offset:2px;}
-.intro-link a:hover{color:var(--coral-ink);}
+.intro-link a{color:var(--blue);text-decoration:underline;text-underline-offset:2px;}
+.intro-link a:hover{color:var(--blue-ink);}
 
 /* Collapsible sections + one consistent toggle header (info icon beside title). */
-.info{margin:0 0 22px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:16px 18px;}
+.info{margin:0 0 22px;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:16px 18px;}
 .stoggle{display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:0;cursor:pointer;text-align:left;font:inherit;}
 .stoggle .infoicon{width:17px;height:17px;color:var(--muted);flex:none;transition:color .15s ease;}
-.stoggle:hover .stitle{color:var(--coral-ink);}
-.stoggle:hover .infoicon,.stoggle[aria-expanded="true"] .infoicon{color:var(--coral);}
+.stoggle:hover .stitle{color:var(--blue);}
+.stoggle:hover .infoicon,.stoggle[aria-expanded="true"] .infoicon{color:var(--blue);}
 .info-body{margin-top:12px;font-size:14px;line-height:1.7;color:var(--muted);}
-.info-body b{color:var(--ink);font-weight:500;}
+.info-body b{color:var(--ink);font-weight:600;}
 .info-body ul{margin:8px 0;padding-left:18px;}
 .info-body li{margin:3px 0;}
 .info-body .disc{font-style:italic;margin-top:8px;display:block;}
@@ -99,13 +104,13 @@ label.stitle{margin-bottom:8px;}
 /* "How this is calculated" content (now inside a toggle). */
 .breakdown{font-size:14px;line-height:1.7;}
 .breakdown .row{color:var(--muted);}
-.breakdown .row b{color:var(--ink);font-weight:500;}
+.breakdown .row b{color:var(--ink);font-weight:600;}
 .breakdown .eq{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);}
-.breakdown .res{color:var(--coral-ink);font-weight:500;white-space:nowrap;}
-.breakdown .split{color:var(--teal-ink);font-weight:500;}
+.breakdown .res{color:var(--burgundy);font-weight:600;white-space:nowrap;}
+.breakdown .split{color:var(--blue);font-weight:600;}
 
 /* "Recommendation" label above the verdict. */
-.reclabel{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px;}
+.reclabel{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--burgundy);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
 
 @media (max-width:520px){
   #stake{flex-wrap:wrap;}
@@ -157,13 +162,15 @@ label.stitle{margin-bottom:8px;}
   .site-footer__logo{width:100px;}
 }
 
-/* Black footer band — just the centered Coral Tribe icon. */
-.site-footer{background:#121212;padding:56px 6vw;display:flex;justify-content:center;align-items:center;}
+/* Near-black footer: centered Coral Tribe icon + Members club link. */
+.site-footer{background:var(--ink);padding:48px 6vw;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:16px;}
 .site-footer__logo-link{display:inline-flex;transition:opacity .3s ease;}
 .site-footer__logo-link:hover{opacity:.7;}
-.site-footer__logo{width:72px;height:auto;opacity:1;display:block;}
+.site-footer__logo{width:64px;height:auto;opacity:1;display:block;}
+.site-footer__club{font-family:var(--head);font-size:15px;font-weight:500;color:#e7e3dc;text-decoration:none;border-bottom:1px solid rgba(231,227,220,.4);padding-bottom:2px;transition:color .2s ease,border-color .2s ease;}
+.site-footer__club:hover{color:#fff;border-color:#fff;}
 @media (max-width:520px){
-  .site-footer__logo{width:56px;}
+  .site-footer__logo{width:52px;}
 }
 </style>
 </head>
@@ -275,8 +282,8 @@ label.stitle{margin-bottom:8px;}
   <div class="verdict compare-only" id="verdict"></div>
 
   <div class="legend compare-only">
-    <span><i style="background:#c4633b"></i>Lock now</span>
-    <span><i style="background:#1d8a6a"></i>Stake then lock</span>
+    <span><i style="background:#7f0303"></i>Lock now</span>
+    <span><i style="background:#146c93"></i>Stake then lock</span>
   </div>
   <div class="chartbox compare-only">
     <canvas id="lvs" role="img" aria-label="Cumulative USDC over 24 months, locking now versus staking then locking">Cumulative earnings comparison over two years.</canvas>
@@ -312,7 +319,7 @@ label.stitle{margin-bottom:8px;}
   <div class="foot" id="foot">Rate uses the live rewards-pool total of 21,695,562 points and today's ~$1,082 monthly holder distribution (40% of ~$2,705 fund yield), scaled by capital deployed at the current ~11% yield. Both connect by API.</div>
 </div>
 
-<!-- Black footer: just the centered Coral Tribe icon, linking to the main site. -->
+<!-- Near-black footer: centered Coral Tribe icon (-> main site) + Members club link. -->
 <footer class="site-footer">
   <a class="site-footer__logo-link" href="https://www.coraltribe.io/" target="_blank" rel="noopener" aria-label="Coral Tribe">
     <img
@@ -321,6 +328,7 @@ label.stitle{margin-bottom:8px;}
       alt="Coral Tribe"
     />
   </a>
+  <a class="site-footer__club" href="https://coral-tribe-hub.netlify.app/" target="_blank" rel="noopener">Members club</a>
 </footer>
 
 <!-- Local, self-contained. No external CDN script the page depends on. -->
@@ -358,8 +366,8 @@ label.stitle{margin-bottom:8px;}
     var padL=48,padR=12,padT=10,padB=34, plotW=w-padL-padR, plotH=h-padT-padB, n=a.length-1;
     var maxV=0; for(var i=0;i<a.length;i++){maxV=Math.max(maxV,a[i],b[i]);}
     var step=niceStep(maxV/4), top=Math.max(step, step*Math.ceil(maxV/step));
-    ctx.font='11px Inter, system-ui, sans-serif'; ctx.fillStyle='#7d776c';
-    ctx.strokeStyle='rgba(0,0,0,0.08)'; ctx.lineWidth=1;
+    ctx.font='11px "Space Mono", ui-monospace, monospace'; ctx.fillStyle='#8b857a';
+    ctx.strokeStyle='rgba(22,18,14,0.09)'; ctx.lineWidth=1;
     ctx.textAlign='right'; ctx.textBaseline='middle';
     for(var g=0; g<=top+0.001; g+=step){
       var y=padT+plotH-(g/top)*plotH;
@@ -374,7 +382,7 @@ label.stitle{margin-bottom:8px;}
       for(var i=0;i<data.length;i++){ var x=padL+(i/n)*plotW, y=padT+plotH-(data[i]/top)*plotH; i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
       ctx.stroke(); ctx.setLineDash([]);
     }
-    line(a,'#c4633b'); line(b,'#1d8a6a',[5,4]);
+    line(a,'#7f0303'); line(b,'#146c93',[5,4]);
   }
 
   // ---- verdict copy (numbers come from the calc module) -------------------
