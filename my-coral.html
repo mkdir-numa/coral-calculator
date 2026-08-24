@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Coral Tribe — My Coral</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --surface:#ffffff; --ink:#16120e; --body:#46413a; --muted:#8b857a;
+  --line:#e7e3dc; --line2:#d9d3c8;
+  --blue:#146c93; --blue-ink:#0f5674; --burgundy:#7f0303; --burgundy-ink:#5c0202;
+  --head:'Space Grotesk',system-ui,sans-serif; --mono:'Space Mono',ui-monospace,monospace;
+  --sans:'Inter',system-ui,sans-serif; --r:8px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);font-size:15px;line-height:1.6;}
+.wrap{max-width:720px;margin:0 auto;padding:28px 20px 48px;}
+@media(min-width:900px){.wrap{max-width:860px;padding:56px 48px 72px;}}
+.brandhead{text-align:center;margin-bottom:24px;}
+.brandhead .logo{height:40px;margin:0 auto 16px;display:block;}
+.brandhead h1{font-family:var(--head);font-weight:600;font-size:30px;letter-spacing:-.01em;color:var(--ink);margin:0 0 6px;}
+.brandhead .subhead{font-family:var(--head);font-size:17px;color:var(--ink);margin:0;}
+form.lookup{display:flex;gap:8px;margin:0 0 8px;}
+input[type=text]{flex:1;height:44px;padding:0 14px;border:1px solid var(--line2);border-radius:var(--r);background:var(--surface);font:inherit;font-family:var(--mono);font-size:13px;color:var(--ink);}
+input[type=text]:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(20,108,147,.15);}
+button.go{background:var(--blue);color:#fff;border:none;border-radius:var(--r);padding:0 20px;font:inherit;font-weight:600;cursor:pointer;}
+button.go:hover{background:var(--blue-ink);}
+button.go:disabled{opacity:.5;cursor:default;}
+.hint{font-size:12px;color:var(--muted);margin:0 0 24px;}
+.status{font-size:14px;color:var(--muted);padding:16px 0;}
+.status.err{color:var(--burgundy);}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:18px;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;}
+.card .l{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);}
+.card .v{font-family:var(--head);font-size:24px;font-weight:600;color:var(--ink);margin-top:4px;}
+.card .s{font-size:12px;color:var(--muted);margin-top:2px;}
+.card.pool .v{color:var(--burgundy);}
+.card.claim .v{color:var(--blue);}
+.estimate{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:var(--r);padding:14px 16px;font-size:14px;line-height:1.6;margin-bottom:22px;}
+.estimate b{color:var(--ink);}
+.sect-title{font-family:var(--head);font-size:18px;color:var(--ink);margin:0 0 10px;}
+.coral-summary{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:10px;}
+.corals{border:1px solid var(--line);border-radius:10px;max-height:340px;overflow-y:auto;}
+.coral{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:13px;}
+.coral:last-child{border-bottom:none;}
+.coral .mint{font-family:var(--mono);font-size:12px;color:var(--ink);}
+.coral .meta{color:var(--muted);font-size:12px;display:flex;gap:10px;align-items:center;}
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.03em;text-transform:uppercase;padding:2px 6px;border-radius:5px;border:1px solid var(--line2);}
+.tag.locked{color:#fff;background:var(--burgundy);border-color:var(--burgundy);}
+.foot{font-size:12px;color:var(--muted);margin-top:22px;line-height:1.6;}
+.site-footer{background:var(--ink);padding:40px 6vw;display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:8px;}
+.site-footer img{width:56px;display:block;opacity:1;}
+.site-footer a.club{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(231,227,220,.5);text-decoration:none;}
+.site-footer a.club:hover{color:rgba(231,227,220,.9);}
+.hidden{display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brandhead">
+    <img class="logo" src="assets/images/coral-tribe-logotype-black.png" alt="Coral Tribe" />
+    <h1>My Coral</h1>
+    <div class="subhead">Look up your points, pool share &amp; rewards</div>
+  </header>
+
+  <form class="lookup" id="form">
+    <input type="text" id="addr" placeholder="Paste your Solana wallet address" autocomplete="off" spellcheck="false" />
+    <button class="go" id="go" type="submit">Look up</button>
+  </form>
+  <p class="hint">Read-only — we never ask you to connect or sign anything.</p>
+
+  <div class="status hidden" id="status"></div>
+
+  <div id="result" class="hidden">
+    <div class="cards">
+      <div class="card pool"><div class="l">Points in rewards pool</div><div class="v" id="rPool">—</div><div class="s" id="rShare"></div></div>
+      <div class="card"><div class="l">Available points (not locked)</div><div class="v" id="rAvail">—</div></div>
+      <div class="card claim"><div class="l">Claimable now</div><div class="v" id="rClaimable">—</div></div>
+      <div class="card"><div class="l">Claimed to date</div><div class="v" id="rClaimed">—</div></div>
+    </div>
+
+    <div class="estimate" id="estimate"></div>
+
+    <div class="sect-title">Your Corals</div>
+    <div class="coral-summary" id="coralSummary"></div>
+    <div class="corals" id="coralList"></div>
+  </div>
+
+  <div class="foot">Points shown are read live from the Coral staking program on Solana. Rewards are a share of the pool, never a guaranteed return.</div>
+</div>
+
+<footer class="site-footer">
+  <a href="https://www.coraltribe.io/" target="_blank" rel="noopener" aria-label="Coral Tribe"><img src="assets/images/logo-icon-white.png" alt="Coral Tribe" /></a>
+  <a class="club" href="https://coral-tribe-hub.netlify.app/" target="_blank" rel="noopener">Members club</a>
+</footer>
+
+<script src="calc.js"></script>
+<script src="config.js"></script>
+<script src="wallet-lookup.js"></script>
+<script>
+(function(){
+  var el=function(id){return document.getElementById(id);};
+  function num(v,dp){return (v||0).toLocaleString('en-US',{minimumFractionDigits:dp||0,maximumFractionDigits:dp||0});}
+  function money(v){return '$'+(v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function moneyR(v){return '$'+Math.round(v||0).toLocaleString('en-US');}
+
+  // config (for the rate tie-in): live pool + fund yield
+  var CFG=CoralConfig.defaultConfig();
+  function rate(){return CFG.baseGrossMonthly*CFG.holderShare/CFG.totalPoolPoints;}
+  var last=null;
+  CoralConfig.loadConfig().then(function(live){CFG=live; if(last) render(last);});
+
+  function setStatus(msg,isErr){var s=el('status'); if(!msg){s.classList.add('hidden');return;} s.textContent=msg; s.className='status'+(isErr?' err':''); }
+
+  function render(res){
+    last=res;
+    var u=res.user;
+    el('result').classList.remove('hidden');
+    if(!u){
+      el('rPool').textContent='0'; el('rAvail').textContent='0';
+      el('rClaimable').textContent='$0.00'; el('rClaimed').textContent='$0.00';
+      el('rShare').textContent='';
+    } else {
+      el('rPool').textContent=num(u.pointsInPool,0);
+      el('rAvail').textContent=num(u.availablePoints,0);
+      el('rClaimable').textContent=money(u.availableClaim);
+      el('rClaimed').textContent=money(u.claimedRewards);
+      var share=CFG.totalPoolPoints? (u.pointsInPool/CFG.totalPoolPoints*100):0;
+      el('rShare').textContent=share? (share<0.01?'<0.01':share.toFixed(2))+'% of the pool':'';
+    }
+    // gift estimate
+    var rt=rate();
+    var pool=u?u.pointsInPool:0, avail=u?u.availablePoints:0;
+    var nowMo=pool*rt, addMo=avail*0.9*rt; // locking applies a 10% fee
+    var est='';
+    if(pool>0) est+='At the current rate your locked points earn about <b>'+money(nowMo)+'/month</b>. ';
+    if(avail>0) est+='Locking your '+num(avail,0)+' available points would add roughly <b>'+money(addMo)+'/month</b> (after the 10% lock fee). ';
+    if(!pool && !avail) est='No points found for this wallet yet — stake your Corals to start earning.';
+    est+='<span style="color:var(--muted)"> Nothing is guaranteed.</span>';
+    el('estimate').innerHTML=est;
+
+    // corals
+    var c=res.corals, byTier={Flexible:0,ThreeMonths:0,TwelveMonths:0}, locked=0;
+    c.forEach(function(x){byTier[x.tier]++; if(x.lockedInPool)locked++;});
+    el('coralSummary').textContent=c.length+' staked · '+byTier.Flexible+' flexible · '+byTier.ThreeMonths+' 3-month · '+byTier.TwelveMonths+' 12-month · '+locked+' locked in pool';
+    var tierLabel={Flexible:'Flexible',ThreeMonths:'3-month',TwelveMonths:'12-month'};
+    el('coralList').innerHTML = c.length ? c.map(function(x){
+      return '<div class="coral"><span class="mint">'+x.mint.slice(0,4)+'…'+x.mint.slice(-4)+'</span>'+
+        '<span class="meta"><span class="tag'+(x.lockedInPool?' locked':'')+'">'+(x.lockedInPool?'locked':tierLabel[x.tier])+'</span>'+
+        (x.lockedInPool?'':(x.daysToUnstake+'d to unstake'))+'</span></div>';
+    }).join('') : '<div class="coral"><span class="meta">No staked Corals.</span></div>';
+  }
+
+  el('form').addEventListener('submit',function(e){
+    e.preventDefault();
+    var addr=el('addr').value.trim();
+    el('result').classList.add('hidden');
+    if(!CoralWallet.isValid(addr)){setStatus('That doesn’t look like a valid Solana address.',true);return;}
+    setStatus('Reading the chain…',false); el('go').disabled=true;
+    CoralWallet.lookup(addr).then(function(res){setStatus(''); el('go').disabled=false; render(res);})
+      .catch(function(err){el('go').disabled=false; setStatus('Lookup failed: '+err.message,true);});
+  });
+
+  // deep link: /my-coral?address=...
+  var qp=new URLSearchParams(location.search).get('address');
+  if(qp){el('addr').value=qp; el('form').dispatchEvent(new Event('submit'));}
+})();
+</script>
+</body>
+</html>
