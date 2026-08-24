@@ -47,6 +47,11 @@
   // calculator applies the 40% holder share itself.
   var FEED_URL = 'https://script.google.com/macros/s/AKfycbyT82AHrGh8Z42ja1o9nGECgTcQM-eMkIhtI2uytTwEw0BtFCVN8H1wmm0aak-gaOxz/exec';
 
+  // Live on-chain aggregates written by the snapshotter (snapshot.mjs). Supplies
+  // the true rewards-pool total (GlobalState.total_locked_points) plus the pool
+  // stats shown in "Reward Pool details". Missing/failed = fall back to constants.
+  var STATS_URL = 'stats.json';
+
   function readField(json, key) {
     var map = {
       totalPoolPoints: ['lockedPoints', 'totalPoolPoints', 'points'],
@@ -68,26 +73,34 @@
    * The resolved object is ready to hand to CoralCalc.computeRewards, plus anchors.
    */
   function loadConfig() {
-    if (!FEED_URL || typeof fetch === 'undefined') return Promise.resolve(defaultConfig());
-    return fetch(FEED_URL)
-      .then(function (r) { return r.ok ? r.json() : {}; })
-      .catch(function () { return {}; })
-      .then(function (json) {
-        var live = {};
-        ['totalPoolPoints', 'grossMonthly', 'capitalDeployed', 'irr'].forEach(function (k) {
-          var v = readField(json, k);
-          live[k] = (v != null) ? v : FALLBACK[k];
-        });
-        return buildConfig(live);
+    if (typeof fetch === 'undefined') return Promise.resolve(defaultConfig());
+    var feedP = FEED_URL
+      ? fetch(FEED_URL).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
+      : Promise.resolve({});
+    var statsP = STATS_URL
+      ? fetch(STATS_URL, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+      : Promise.resolve(null);
+    return Promise.all([feedP, statsP]).then(function (res) {
+      var json = res[0] || {}, stats = res[1] || null;
+      var live = {};
+      ['totalPoolPoints', 'grossMonthly', 'capitalDeployed', 'irr'].forEach(function (k) {
+        var v = readField(json, k);
+        live[k] = (v != null) ? v : FALLBACK[k];
       });
+      // On-chain pool total wins when available (the true denominator).
+      if (stats && typeof stats.poolPoints === 'number' && isFinite(stats.poolPoints)) {
+        live.totalPoolPoints = stats.poolPoints;
+      }
+      return buildConfig(live, stats);
+    });
   }
 
   // Synchronous build from the fallbacks — used for first paint before any fetch.
   function defaultConfig() {
-    return buildConfig(FALLBACK);
+    return buildConfig(FALLBACK, null);
   }
 
-  function buildConfig(live) {
+  function buildConfig(live, stats) {
     return {
       // live (with fallbacks applied)
       totalPoolPoints: live.totalPoolPoints,
@@ -107,7 +120,9 @@
       fullyDeployed: CONSTANTS.fullyDeployed,
       growthCap: CONSTANTS.growthCap,
       lockFee: CONSTANTS.lockFee,
-      months: CONSTANTS.months
+      months: CONSTANTS.months,
+      // live on-chain pool stats (null until stats.json loads)
+      stats: stats || null
     };
   }
 

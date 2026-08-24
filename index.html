@@ -307,14 +307,19 @@ label.stitle{margin-bottom:8px;}
         <div class="advcell"><div class="l">Capital deployed</div><div class="v" id="adDeployed">$288,000</div></div>
         <div class="advcell"><div class="l">Idle capital</div><div class="v" id="adIdle">$219,000</div></div>
         <div class="advcell"><div class="l">Current yield</div><div class="v" id="adIrr">11%</div></div>
-        <div class="advcell"><div class="l">Latest month paid (Jul '26)</div><div class="v">$888</div></div>
-        <div class="advcell"><div class="l">Total network points<span class="smp">sample</span></div><div class="v">22,906,870</div></div>
-        <div class="advcell"><div class="l">Daily points emitted<span class="smp">sample</span></div><div class="v">59,940</div></div>
-        <div class="advcell"><div class="l">Staked, flexible<span class="smp">sample</span></div><div class="v">324</div></div>
-        <div class="advcell"><div class="l">Staked, 3-month<span class="smp">sample</span></div><div class="v">2,004</div></div>
-        <div class="advcell"><div class="l">Staked, 12-month<span class="smp">sample</span></div><div class="v">2,019</div></div>
+        <div class="advcell"><div class="l">Points in circulation</div><div class="v" id="adCirc">—</div></div>
+        <div class="advcell"><div class="l">% of points locked</div><div class="v" id="adPctLocked">—</div></div>
+        <div class="advcell"><div class="l">Daily points emitted</div><div class="v" id="adEmission">—</div></div>
+        <div class="advcell"><div class="l">Corals staked</div><div class="v" id="adStaked">—</div></div>
+        <div class="advcell"><div class="l">Staked, flexible</div><div class="v" id="adStkFlex">—</div></div>
+        <div class="advcell"><div class="l">Staked, 3-month</div><div class="v" id="adStk3m">—</div></div>
+        <div class="advcell"><div class="l">Staked, 12-month</div><div class="v" id="adStk12m">—</div></div>
+        <div class="advcell"><div class="l">Corals locked in pool</div><div class="v" id="adLockedCorals">—</div></div>
+        <div class="advcell"><div class="l">Rewards distributed</div><div class="v" id="adDistributed">—</div></div>
+        <div class="advcell"><div class="l">Distributions</div><div class="v" id="adDistN">—</div></div>
+        <div class="advcell"><div class="l">Holders</div><div class="v" id="adHolders">—</div></div>
       </div>
-      <div class="advnote">The 45 / 40 / 15 split and the holder distribution are live-derived. Values marked sample are placeholders until the data feed is connected.</div>
+      <div class="advnote">Pool, circulation, staking and distribution figures are read live on-chain; fund figures come from the finance feed. Nothing here can break the page — each value falls back if a source is unavailable.</div>
     </div>
   </section>
 
@@ -469,6 +474,22 @@ label.stitle{margin-bottom:8px;}
     el('fund').max=CFG.growthCap;
     var holderToday=CFG.baseGrossMonthly*CFG.holderShare;
     el('foot').textContent='Rate uses the live rewards-pool total of '+fmt(CFG.totalPoolPoints)+' points and today’s ~'+money(holderToday)+' monthly holder distribution (40% of ~'+money(CFG.baseGrossMonthly)+' fund yield), scaled by capital deployed at the current ~'+pct(CFG.irr)+' yield. Both connect by API.';
+    renderStats();
+  }
+
+  // Fill "Reward Pool details" from the live on-chain snapshot (stats.json).
+  function renderStats(){
+    var s=CFG.stats; if(!s) return;
+    var set=function(id,v){var e=el(id); if(e) e.textContent=v;};
+    set('adCirc', fmt(s.circulation));
+    set('adPctLocked', s.pctLocked!=null ? s.pctLocked+'%' : '—');
+    set('adEmission', fmt(s.emissionPerDay)+'/day');
+    set('adStaked', fmt(s.stakedTotal));
+    if(s.perTier){ set('adStkFlex', fmt(s.perTier.Flexible)); set('adStk3m', fmt(s.perTier.ThreeMonths)); set('adStk12m', fmt(s.perTier.TwelveMonths)); }
+    set('adLockedCorals', fmt(s.lockedInPool));
+    set('adDistributed', money(s.rewardsDistributed));
+    set('adDistN', fmt(s.distributions));
+    set('adHolders', fmt(s.holders));
   }
 
   // Switch between "just locking" (simple) and "stake or lock?" (compare) views.
