@@ -127,6 +127,49 @@ export async function getStats() {
   };
 }
 
+// Distribution history — reconstructed from `distribute_rewards` transactions.
+// The instruction carries the USDC `amount` (u64) and touches the admin wallet
+// (the signer), so we scan the admin's signatures and decode each matching ix.
+// This is SLOW (sequential getTransaction, rate-limited proxy) — run it offline
+// (snapshot/cron), never on a live page load. ~10 distributions today.
+const DISTRIBUTE_IX = Buffer.from([97, 6, 227, 255, 124, 165, 3, 148]);
+
+export async function getDistributions(maxScan = 8000) {
+  const gs = await accountsByType('GlobalState');
+  const admin = b58encode(gs[0].data.subarray(9, 41)); // GlobalState.admin
+  const out = [];
+  let before, scanned = 0;
+  while (scanned < maxScan) {
+    const opts = before ? { limit: 1000, before } : { limit: 1000 };
+    const sigs = await rpc('getSignaturesForAddress', [admin, opts]);
+    if (!sigs || !sigs.length) break;
+    for (const s of sigs) {
+      scanned++; before = s.signature;
+      try {
+        const tx = await rpc('getTransaction', [s.signature, { encoding: 'jsonParsed', maxSupportedTransactionVersion: 0 }]);
+        if (!tx) continue;
+        for (const ins of tx.transaction.message.instructions) {
+          if (ins.programId !== PROGRAM_ID || !ins.data) continue;
+          const data = Buffer.from(b58decode(ins.data));
+          if (data.length >= 16 && data.subarray(0, 8).equals(DISTRIBUTE_IX)) {
+            out.push({ date: new Date(tx.blockTime * 1000).toISOString().slice(0, 10), amount: Number(data.readBigUInt64LE(8)) / USDC });
+          }
+        }
+      } catch { /* skip unparseable tx */ }
+    }
+    if (sigs.length < 1000) break;
+  }
+  return out.sort((a, b) => a.date.localeCompare(b.date));
+}
+
+// Group real distributions by month (drop tiny test txns below `minAmount`).
+export function monthlyFromDistributions(dists, minAmount = 10) {
+  const by = {};
+  for (const d of dists) if (d.amount >= minAmount) by[d.date.slice(0, 7)] = (by[d.date.slice(0, 7)] || 0) + d.amount;
+  return Object.entries(by).map(([month, amount]) => ({ month, amount: Math.round(amount * 100) / 100 }))
+    .sort((a, b) => a.month.localeCompare(b.month));
+}
+
 // Per-wallet lookup (for "My Coral").
 export async function getWallet(address) {
   if (!isValidAddress(address)) throw new Error('invalid address');
