@@ -4,7 +4,7 @@
  *   history.json  appended time-series (one trimmed record per run) for charts
  *
  * Run:  node snapshot.mjs
- * Scheduled by .github/workflows/snapshot.yml (commits both files on a cron).
+ * Scheduled by .github/workflows/feeds.yml (commits the feeds on a cron).
  */
 import { writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
