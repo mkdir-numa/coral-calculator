@@ -1,0 +1,48 @@
+# Refreshes the committed data feeds (distributions.json, stats.json,
+# history.json) from on-chain state and pushes them, which triggers the
+# Netlify deploy of rewards.coraltribe.io. The main website and the
+# members hub both read these feeds, so a new monthly distribution
+# reaches every site with no manual steps.
+#
+# distributions.mjs --if-changed is a sub-second no-op unless a new
+# distribution actually landed; only then does it run the ~10-minute
+# admin-wallet scan. snapshot.mjs is cheap and runs every time, keeping
+# history.json's time series daily. No secrets required: the scripts
+# talk to the public RPC proxy on their own.
+name: feeds
+
+on:
+  schedule:
+    - cron: "23 3 * * *" # daily, off-peak minute (GitHub delays :00 crons)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: feeds
+  cancel-in-progress: false
+
+jobs:
+  feeds:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Rebuild distributions feed (only if a new one landed)
+        run: node distributions.mjs --if-changed
+
+      - name: Snapshot points stats
+        run: node snapshot.mjs
+
+      - name: Commit feeds if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add distributions.json stats.json history.json
+          git diff --cached --quiet || { git commit -m "chore: refresh data feeds"; git push; }
