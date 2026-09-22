@@ -29,7 +29,7 @@ more whitespace, fewer elements, no decoration.
 ## Fonts
 
 - **"Coral Tribe"** display serif — the wordmark font. File:
-  `coral-tribe-website/assets/fonts/coral-tribe.ttf` (13 KB, copy it over;
+  `coral-tribe-website/assets/fonts/coral-tribe.ttf` (13 KB, already copied to `assets/fonts/coral-tribe.ttf` in this repo;
   `font-display: swap`, preload it). Used ONLY for: page-title words, big
   headline numbers, stat values.
   **Important quirk:** lowercase letters render as alternate decorative glyphs
