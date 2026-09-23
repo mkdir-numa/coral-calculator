@@ -14,7 +14,7 @@
 :root{
   --bg:#ffffff; --surface:#ffffff; --ink:#16120e; --body:#46413a; --muted:#8b857a;
   --line:#e7e3dc; --line2:#d9d3c8;
-  --blue:#146c93; --blue-ink:#0f5674; --burgundy:#7f0303; --burgundy-ink:#5c0202;
+  --blue:#146c93; --blue-ink:#0f5674; --deepsea:#0e3a5a; --deepsea-ink:#08293f;
   --head:'Space Grotesk',system-ui,sans-serif;
   --mono:'Space Mono',ui-monospace,SFMono-Regular,monospace;
   --sans:'Inter',system-ui,sans-serif; --r:8px;
@@ -32,10 +32,10 @@ input[type=range]{width:100%;accent-color:var(--blue);}
 .seg{display:flex;gap:6px;flex-wrap:wrap;}
 .chip,.btn{font:inherit;font-size:13px;padding:7px 12px;border:1px solid var(--line2);border-radius:var(--r);background:var(--surface);color:var(--body);cursor:pointer;text-align:center;transition:border-color .12s ease,background .12s ease,color .12s ease;}
 .btn small{display:block;font-size:10px;opacity:.7;margin-top:1px;}
-.btn.active,.chip.active{background:var(--burgundy);color:#fff;border-color:var(--burgundy);}
+.btn.active,.chip.active{background:var(--deepsea);color:#fff;border-color:var(--deepsea);}
 .btn.active small{opacity:.85;}
 .chip:hover,.btn:hover{border-color:var(--ink);}
-.btn.active:hover,.chip.active:hover{background:var(--burgundy-ink);border-color:var(--burgundy-ink);}
+.btn.active:hover,.chip.active:hover{background:var(--deepsea-ink);border-color:var(--deepsea-ink);}
 #stake{flex-wrap:nowrap;}
 #stake .btn{flex:1;min-width:0;padding:7px 4px;}
 .fund{margin-bottom:24px;}
@@ -53,7 +53,7 @@ input[type=range]{width:100%;accent-color:var(--blue);}
 .kv span:first-child{color:var(--muted);}
 .fee{font-size:11px;color:var(--muted);}
 .note{font-size:12px;color:var(--muted);margin-top:10px;}
-.verdict{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--burgundy);border-radius:var(--r);padding:12px 16px;font-size:14px;line-height:1.6;color:var(--body);margin-bottom:18px;}
+.verdict{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--deepsea);border-radius:var(--r);padding:12px 16px;font-size:14px;line-height:1.6;color:var(--body);margin-bottom:18px;}
 .verdict b{color:var(--ink);}
 .legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-bottom:8px;}
 .legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:6px;}
@@ -67,8 +67,8 @@ input[type=range]{width:100%;accent-color:var(--blue);}
 .advcell .l{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);}
 .advcell .v{font-size:15px;font-weight:500;color:var(--ink);}
 .advnote{font-size:11px;color:var(--muted);margin-top:14px;}
-.smp{font-family:var(--mono);font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:var(--burgundy);margin-left:5px;}
-.coral{color:var(--burgundy)} .tealc{color:var(--blue)} .warn{color:var(--burgundy)}
+.smp{font-family:var(--mono);font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:var(--deepsea);margin-left:5px;}
+.coral{color:var(--deepsea)} .tealc{color:var(--blue)} .warn{color:var(--deepsea)}
 
 /* Mode toggle: simple "just locking" vs full "stake or lock" comparison. */
 .modes{display:flex;gap:8px;margin:0 0 24px;}
@@ -81,16 +81,25 @@ input[type=range]{width:100%;accent-color:var(--blue);}
 .stitle{font-family:var(--head);font-size:18px;font-weight:500;color:var(--ink);text-transform:none;letter-spacing:normal;}
 label.stitle{margin-bottom:8px;}
 .modes-title{margin:22px 0 12px;}
+/* Entry point to the standalone lookup page. Deliberately an outline link,
+   not a filled .btn, so it never reads as a third calculator mode. */
+.lookup-cta{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  width:100%;margin:0 0 24px;padding:12px 16px;border:1px solid var(--line2);
+  border-radius:var(--r);background:var(--surface);color:var(--blue);
+  font-family:var(--sans);font-size:14px;font-weight:600;text-decoration:none;
+  transition:border-color .12s ease,color .12s ease,background .12s ease;}
+.lookup-cta small{display:block;font-family:var(--sans);font-weight:400;font-size:12px;
+  color:var(--muted);margin-top:2px;transition:color .12s ease;}
+.lookup-cta__arrow{width:18px;height:18px;flex:none;}
+.lookup-cta:hover{border-color:var(--blue);background:rgba(20,108,147,.04);}
+.lookup-cta:hover small{color:var(--body);}
+.lookup-cta:focus-visible{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(20,108,147,.15);}
 
 /* Brand header: wordmark + title + intro, centered. */
 .brandhead{text-align:center;margin-bottom:22px;}
 .brandhead .logo{font-family:"Coral Tribe",Georgia,serif;font-size:24px;line-height:1;letter-spacing:.06em;color:var(--ink);margin:6px auto 40px;display:block;}
 .brandhead h1{margin:0 0 8px;}
 .brandhead .subhead{font-family:var(--head);font-size:18px;font-weight:500;color:var(--ink);margin:0 0 14px;}
-.brandhead .intro{font-size:14px;color:var(--muted);line-height:1.65;max-width:56ch;margin:0 auto;}
-.intro-link{text-align:center;font-size:14px;color:var(--muted);line-height:1.65;max-width:56ch;margin:12px auto 0;}
-.intro-link a{color:var(--blue);text-decoration:underline;text-underline-offset:2px;}
-.intro-link a:hover{color:var(--blue-ink);}
 
 /* Collapsible sections + one consistent toggle header (info icon beside title). */
 .info{margin:0 0 22px;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:16px 18px;}
@@ -99,6 +108,10 @@ label.stitle{margin-bottom:8px;}
 .stoggle:hover .stitle{color:var(--blue);}
 .stoggle:hover .infoicon,.stoggle[aria-expanded="true"] .infoicon{color:var(--blue);}
 .info-body{margin-top:12px;font-size:14px;line-height:1.7;color:var(--muted);}
+.info-body p{margin:0 0 10px;}
+.info-body p:last-child{margin-bottom:0;}
+.info-body a{color:var(--blue);text-decoration:underline;text-underline-offset:2px;}
+.info-body a:hover{color:var(--blue-ink);}
 .info-body b{color:var(--ink);font-weight:600;}
 .info-body ul{margin:8px 0;padding-left:18px;}
 .info-body li{margin:3px 0;}
@@ -109,11 +122,11 @@ label.stitle{margin-bottom:8px;}
 .breakdown .row{color:var(--muted);}
 .breakdown .row b{color:var(--ink);font-weight:600;}
 .breakdown .eq{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);}
-.breakdown .res{color:var(--burgundy);font-weight:600;white-space:nowrap;}
+.breakdown .res{color:var(--deepsea);font-weight:600;white-space:nowrap;}
 .breakdown .split{color:var(--blue);font-weight:600;}
 
 /* "Recommendation" label above the verdict. */
-.reclabel{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--burgundy);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+.reclabel{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--deepsea);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
 
 @media (max-width:520px){
   #stake{flex-wrap:wrap;}
@@ -187,8 +200,6 @@ label.stitle{margin-bottom:8px;}
   <header class="brandhead">
     <div class="logo">CORAL TRIBE</div>
     <h1>Coral Tribe Points Calculator</h1>
-    <p class="intro">Staking your corals earns you points. Points earn you cash gifts. Lock your Coral NFT with points in the rewards pool to start earning your cash gifts.</p>
-    <p class="intro-link">For staking and rewards, <a href="https://app.refihub.io/community/" target="_blank" rel="noopener">Visit ReFi Hub</a> and connect your wallet holding your Coral NFTs.</p>
   </header>
 
   <section class="info">
@@ -198,14 +209,24 @@ label.stitle{margin-bottom:8px;}
     </button>
     <div class="info-body" id="fundInfoBody" hidden>
       <p>Coral Tribe has an impact fund that primarily invests via ReFi Hub, a clean energy investment platform. The staking mechanism lives in ReFi Hub.</p>
+      <p>Staking your corals earns you points. Points earn you cash rewards. Lock your Coral NFT with points in the rewards pool to start earning your cash rewards.</p>
+      <p>For staking and rewards, <a href="https://app.refihub.io/community/" target="_blank" rel="noopener">Visit ReFi Hub</a> and connect your wallet holding your Coral NFTs.</p>
     </div>
   </section>
 
   <div class="stitle modes-title">Select what applies to you</div>
   <div class="modes" id="modes">
     <button class="btn active" data-m="simple">I'm locking my corals now<small>What you'd earn today</small></button>
-    <button class="btn" data-m="compare">Stake or Lock Corals<small>Compare cash gifts over 24 months</small></button>
+    <button class="btn" data-m="compare">Stake or Lock Corals<small>Compare cash rewards over 24 months</small></button>
   </div>
+
+  <a class="lookup-cta" href="my-coral.html" target="_blank" rel="noopener">
+    <span class="lookup-cta__text">
+      Look up my Coral
+      <small>See your points, pool share and rewards</small>
+    </span>
+    <svg class="lookup-cta__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5.5 15.5 10 11 14.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
 
   <div class="grid">
     <div>
@@ -235,11 +256,11 @@ label.stitle{margin-bottom:8px;}
       <label class="stitle">Community Fund Deployment</label>
       <span class="fundout" id="fundOut">$288K · today</span>
     </div>
-    <div class="anchors"><span>Today $288K</span><span>Fully deployed $507K</span><span>Growth $1M</span></div>
+    <div class="anchors"><span id="anchToday">Today $288K</span><span id="anchFull">Fully deployed $507K</span><span id="anchGrowth">Growth $1M</span></div>
     <input type="range" id="fund" min="288000" max="1000000" value="288000" step="1000" />
     <div class="info" style="margin-top:14px;">
       <button class="stoggle" aria-controls="fundedBody" aria-expanded="false">
-        <span class="stitle">How the gifts are funded</span>
+        <span class="stitle">How the rewards are funded</span>
         <svg class="infoicon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="6.3" r="1.1" fill="currentColor"/><rect x="9" y="8.6" width="2" height="6" rx="1" fill="currentColor"/></svg>
       </button>
       <div class="info-body" id="fundedBody" hidden>
@@ -247,7 +268,7 @@ label.stitle{margin-bottom:8px;}
         <p>Each month the fund's returns are split three ways:</p>
         <ul>
           <li><b>45%</b> — reinvested to grow the fund</li>
-          <li><b>40%</b> — paid to holders who lock points in the gifts pool</li>
+          <li><b>40%</b> — paid to holders who lock points in the rewards pool</li>
           <li><b>15%</b> — community fund management fee</li>
         </ul>
         <p>Right now the fund earns about <b id="fnGross">$2,705</b> per month; holders receive <b id="fnHolders">$1,082</b> and management <b id="fnMgmt">$406</b>. These move with fund performance.</p>
@@ -289,7 +310,7 @@ label.stitle{margin-bottom:8px;}
   <div class="verdict compare-only" id="verdict"></div>
 
   <div class="legend compare-only">
-    <span><i style="background:#7f0303"></i>Lock now</span>
+    <span><i style="background:#0e3a5a"></i>Lock now</span>
     <span><i style="background:#146c93"></i>Stake then lock</span>
   </div>
   <div class="chartbox compare-only">
@@ -393,7 +414,7 @@ label.stitle{margin-bottom:8px;}
       for(var i=0;i<data.length;i++){ var x=padL+(i/n)*plotW, y=padT+plotH-(data[i]/top)*plotH; i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
       ctx.stroke(); ctx.setLineDash([]);
     }
-    line(a,'#7f0303'); line(b,'#146c93',[5,4]);
+    line(a,'#0e3a5a'); line(b,'#146c93',[5,4]);
   }
 
   // ---- verdict copy (numbers come from the calc module) -------------------
@@ -448,7 +469,7 @@ label.stitle{margin-bottom:8px;}
     el('fundOut').textContent=cap(deployed)+' · '+zone;
     el('fundOut').className='fundout'+(spec?' warn':'');
 
-    // "How the gifts are funded" toggle — live figures
+    // "How the rewards are funded" toggle — live figures
     el('fnGross').textContent=money(r.grossYieldMonthly);
     el('fnHolders').textContent=money(r.monthlyDistribution);
     el('fnMgmt').textContent=money(r.rhFee);
@@ -476,6 +497,11 @@ label.stitle{margin-bottom:8px;}
     FULL=CFG.fullyDeployed; GROWTH=CFG.growthCap; MONTHS=CFG.months;
     el('fund').min=CFG.baseCap;
     el('fund').max=CFG.growthCap;
+    // Slider anchor labels track the same config as the slider bounds, so a feed
+    // that moves capitalDeployed can't leave the "today" label saying something else.
+    el('anchToday').textContent='Today '+cap(CFG.baseCap);
+    el('anchFull').textContent='Fully deployed '+cap(CFG.fullyDeployed);
+    el('anchGrowth').textContent='Growth '+cap(CFG.growthCap);
     var holderToday=CFG.baseGrossMonthly*CFG.holderShare;
     el('foot').textContent='Rate uses the live rewards-pool total of '+fmt(CFG.totalPoolPoints)+' points and today’s ~'+money(holderToday)+' monthly holder distribution (40% of ~'+money(CFG.baseGrossMonthly)+' fund yield), scaled by capital deployed at the current ~'+pct(CFG.irr)+' yield. Both connect by API.';
     renderStats();
