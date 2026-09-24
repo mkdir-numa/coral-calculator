@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
+/* Coral Tribe wordmark face — self-hosted, used only for the header wordmark. */
+@font-face{font-family:"Coral Tribe";src:url("assets/fonts/coral-tribe.ttf") format("truetype");font-weight:normal;font-style:normal;font-display:swap;}
 :root{
   --bg:#ffffff; --surface:#ffffff; --ink:#16120e; --body:#46413a; --muted:#8b857a;
   --line:#e7e3dc; --line2:#d9d3c8;
@@ -16,11 +18,15 @@
   --sans:'Inter',system-ui,sans-serif; --r:8px;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);font-size:15px;line-height:1.6;}
-.wrap{max-width:720px;margin:0 auto;padding:28px 20px 48px;}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);font-size:15px;line-height:1.6;
+  min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;}
+.wrap{flex:1 0 auto;width:100%;max-width:720px;margin:0 auto;padding:28px 20px 48px;}
 @media(min-width:900px){.wrap{max-width:860px;padding:56px 48px 72px;}}
 .brandhead{text-align:center;margin-bottom:24px;}
-.brandhead .logo{height:40px;margin:0 auto 16px;display:block;}
+.brandhead .logo{font-family:"Coral Tribe",Georgia,serif;font-size:24px;line-height:1;letter-spacing:.06em;color:var(--ink);margin:0 auto 16px;display:block;}
+@media(min-width:900px){.brandhead .logo{font-size:26px;}}
+@media(min-width:1600px){.brandhead .logo{font-size:32px;}}
+@media(min-width:2200px){.brandhead .logo{font-size:40px;}}
 .brandhead h1{font-family:var(--head);font-weight:600;font-size:30px;letter-spacing:-.01em;color:var(--ink);margin:0 0 6px;}
 .brandhead .subhead{font-family:var(--head);font-size:17px;color:var(--ink);margin:0;}
 .backlink{display:inline-flex;align-items:center;gap:6px;margin-top:12px;
@@ -55,17 +61,15 @@ button.go:disabled{opacity:.5;cursor:default;}
 .tag{font-family:var(--mono);font-size:10px;letter-spacing:.03em;text-transform:uppercase;padding:2px 6px;border-radius:5px;border:1px solid var(--line2);}
 .tag.locked{color:#fff;background:var(--deepsea);border-color:var(--deepsea);}
 .foot{font-size:12px;color:var(--muted);margin-top:22px;line-height:1.6;}
-.site-footer{background:var(--ink);padding:40px 6vw;display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:8px;}
+.site-footer{flex:none;background:var(--ink);padding:40px 6vw;display:flex;flex-direction:column;align-items:center;margin-top:8px;}
 .site-footer img{width:56px;display:block;opacity:1;}
-.site-footer a.club{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(231,227,220,.5);text-decoration:none;}
-.site-footer a.club:hover{color:rgba(231,227,220,.9);}
 .hidden{display:none;}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="brandhead">
-    <img class="logo" src="assets/images/coral-tribe-logotype-black.png" alt="Coral Tribe" />
+    <div class="logo">CORAL TRIBE</div>
     <h1>My Coral</h1>
     <div class="subhead">Look up your points, pool share &amp; rewards</div>
     <a class="backlink" href="index.html">
@@ -102,7 +106,6 @@ button.go:disabled{opacity:.5;cursor:default;}
 
 <footer class="site-footer">
   <a href="https://www.coraltribe.io/" target="_blank" rel="noopener" aria-label="Coral Tribe"><img src="assets/images/logo-icon-white.png" alt="Coral Tribe" /></a>
-  <a class="club" href="https://coral-tribe-hub.netlify.app/" target="_blank" rel="noopener">Members club</a>
 </footer>
 
 <script src="calc.js"></script>
