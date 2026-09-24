@@ -37,6 +37,11 @@ more whitespace, fewer elements, no decoration.
   ("OUR FUND", not "Our Fund") so I, N etc. render as clean letters.
 - **Helvetica Neue stack** (`--font-body`) for everything else. Body copy is
   regular weight; labels and nav are bold.
+- **Georgia** (`Georgia, "Times New Roman", serif`) — the quiet "editorial
+  serif", used sparingly where a full sentence needs presence but the display
+  font would be too decorative: the Community page's large statement
+  (`clamp(2rem, 4.2vw, 3.4rem)`, line-height 1.16) and its link-list labels
+  (`clamp(1.3rem, 2.3vw, 1.9rem)`). System font, nothing to load.
 - No Google Fonts, no handwritten/script fonts (Caveat Brush was tried and
   rejected as off-brand).
 
