@@ -42,9 +42,9 @@ if (ifChanged && existsSync(outPath)) {
 const dists = await getDistributions();
 const out = {
   updatedAt: new Date().toISOString(),
-  totalDistributed: gs.rewardsDistributed,   // authoritative on-chain total (incl. test txns)
+  totalDistributed: gs.rewardsDistributed,   // authoritative on-chain total
   distributions: gs.distributions,           // on-chain count
-  monthly: monthlyFromDistributions(dists),  // real monthly payouts (test txns dropped)
+  monthly: monthlyFromDistributions(dists),  // monthly payouts (sums to the total)
 };
 
 // Never publish an empty or shrinking history — a partial scan (rate limit,

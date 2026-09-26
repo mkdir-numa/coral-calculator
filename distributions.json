@@ -1,23 +1,23 @@
 {
-  "updatedAt": "2026-08-26T15:26:39.827Z",
-  "totalDistributed": 11215.24,
-  "distributions": 12,
+  "updatedAt": "2026-09-26T15:56:40.098Z",
+  "totalDistributed": 12516.24,
+  "distributions": 15,
   "monthly": [
     {
       "month": "2026-03",
-      "amount": 1943.24
+      "amount": 1945.24
     },
     {
       "month": "2026-04",
-      "amount": 2500
+      "amount": 2501
     },
     {
       "month": "2026-05",
-      "amount": 2750
+      "amount": 2751
     },
     {
       "month": "2026-06",
-      "amount": 1515
+      "amount": 1516
     },
     {
       "month": "2026-07",
@@ -25,7 +25,11 @@
     },
     {
       "month": "2026-08",
-      "amount": 1300
+      "amount": 1301
+    },
+    {
+      "month": "2026-09",
+      "amount": 1301
     }
   ]
 }

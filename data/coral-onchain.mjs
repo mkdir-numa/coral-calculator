@@ -162,10 +162,11 @@ export async function getDistributions(maxScan = 8000) {
   return out.sort((a, b) => a.date.localeCompare(b.date));
 }
 
-// Group real distributions by month (drop tiny test txns below `minAmount`).
-export function monthlyFromDistributions(dists, minAmount = 10) {
+// Group distributions by month. Small test txns are kept: they land in the
+// pool like any other distribution, so holders can claim them.
+export function monthlyFromDistributions(dists) {
   const by = {};
-  for (const d of dists) if (d.amount >= minAmount) by[d.date.slice(0, 7)] = (by[d.date.slice(0, 7)] || 0) + d.amount;
+  for (const d of dists) by[d.date.slice(0, 7)] = (by[d.date.slice(0, 7)] || 0) + d.amount;
   return Object.entries(by).map(([month, amount]) => ({ month, amount: Math.round(amount * 100) / 100 }))
     .sort((a, b) => a.month.localeCompare(b.month));
 }
