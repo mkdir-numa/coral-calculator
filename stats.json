@@ -1,18 +1,18 @@
 {
-  "updatedAt": "2026-09-30T09:48:20.081Z",
-  "poolPoints": 22510270.21,
-  "circulation": 38065587.61,
-  "pctLocked": 59.1,
+  "updatedAt": "2026-10-01T10:15:14.884Z",
+  "poolPoints": 22585331.43,
+  "circulation": 38118779.02,
+  "pctLocked": 59.2,
   "rewardsDistributed": 12516.24,
   "distributions": 15,
-  "stakedTotal": 2468,
+  "stakedTotal": 2470,
   "perTier": {
-    "Flexible": 902,
+    "Flexible": 904,
     "ThreeMonths": 67,
     "TwelveMonths": 1499
   },
-  "lockedInPool": 1246,
-  "emissionPerDay": 25794,
+  "lockedInPool": 1264,
+  "emissionPerDay": 25800,
   "holders": 139,
-  "coralsWithPoints": 2602
+  "coralsWithPoints": 2604
 }
