@@ -3,57 +3,62 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Coral Tribe — lock vs stake</title>
-<link rel="preload" href="assets/fonts/coral-tribe.ttf" as="font" type="font/ttf" crossorigin />
+<title>Coral Tribe rewards calculator</title>
+<link rel="preload" href="assets/fonts/coral-tribe-1.1.ttf" as="font" type="font/ttf" crossorigin />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-/* Coral Tribe wordmark face — self-hosted, used only for the header wordmark. */
-@font-face{font-family:"Coral Tribe";src:url("assets/fonts/coral-tribe.ttf") format("truetype");font-weight:normal;font-style:normal;font-display:swap;}
+/* Coral Tribe 1.1, self-hosted, used only for the header wordmark. Capitals are
+   plain; lowercase a e o i n y draw the brand marks, so type it in capitals. */
+@font-face{font-family:"Coral Tribe";src:url("assets/fonts/coral-tribe-1.1.ttf") format("truetype");font-weight:normal;font-style:normal;font-display:swap;}
 :root{
-  --bg:#ffffff; --surface:#ffffff; --ink:#16120e; --body:#46413a; --muted:#8b857a;
-  --line:#e7e3dc; --line2:#d9d3c8;
-  --blue:#146c93; --blue-ink:#0f5674; --deepsea:#0e3a5a; --deepsea-ink:#08293f;
-  --head:'Space Grotesk',system-ui,sans-serif;
+  /* Brand tokens (coral-tribe-brand/brand-kit/tokens.css) under this page's names:
+     body = ink-soft, line = rule, line2 = rule-strong, blue = action. */
+  --bg:#ffffff; --surface:#ffffff; --ink:#16120e; --body:#46413a; --muted:#736d64;
+  --line:#e7e3dc; --line2:#d9d3c8; --wine:#7b2433; --caution:#8a5413;
+  /* Sea blue is the action colour only: links and the primary action. */
+  --blue:#146c93; --blue-ink:#0f5674;
+  --head:Georgia,'Times New Roman',serif;
   --mono:'Space Mono',ui-monospace,SFMono-Regular,monospace;
-  --sans:'Inter',system-ui,sans-serif; --r:8px;
+  --sans:-apple-system,'Helvetica Neue',Helvetica,Arial,sans-serif; --r:0;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);font-size:15px;line-height:1.6;}
 .wrap{max-width:720px;margin:0 auto;padding:28px 20px 48px;}
-h1{font-family:var(--head);font-weight:600;font-size:26px;letter-spacing:-.01em;color:var(--ink);margin:0 0 4px;}
+h1{font-family:var(--head);font-weight:400;font-size:26px;line-height:1.2;color:var(--ink);margin:0 0 4px;}
 .sub{color:var(--muted);font-size:14px;margin:0 0 28px;}
-label{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;}
+label{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px;}
 input[type=number]{width:100%;height:40px;padding:0 12px;border:1px solid var(--line2);border-radius:var(--r);background:var(--surface);font:inherit;color:var(--ink);}
-input[type=number]:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(20,108,147,.15);}
+input[type=number]:focus{outline:2px solid var(--ink);outline-offset:3px;border-color:var(--ink);}
 input[type=range]{width:100%;accent-color:var(--blue);}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-bottom:22px;}
 .seg{display:flex;gap:6px;flex-wrap:wrap;}
 .chip,.btn{font:inherit;font-size:13px;padding:7px 12px;border:1px solid var(--line2);border-radius:var(--r);background:var(--surface);color:var(--body);cursor:pointer;text-align:center;transition:border-color .12s ease,background .12s ease,color .12s ease;}
 .btn small{display:block;font-size:10px;opacity:.7;margin-top:1px;}
-.btn.active,.chip.active{background:var(--deepsea);color:#fff;border-color:var(--deepsea);}
+.btn.active,.chip.active{background:var(--ink);color:#fff;border-color:var(--ink);}
 .btn.active small{opacity:.85;}
 .chip:hover,.btn:hover{border-color:var(--ink);}
-.btn.active:hover,.chip.active:hover{background:var(--deepsea-ink);border-color:var(--deepsea-ink);}
+.btn.active:hover,.chip.active:hover{opacity:.82;}
+.chip:focus-visible,.btn:focus-visible,.stoggle:focus-visible,.advhead:focus-visible{outline:2px solid var(--ink);outline-offset:3px;}
 #stake{flex-wrap:nowrap;}
 #stake .btn{flex:1;min-width:0;padding:7px 4px;}
 .fund{margin-bottom:24px;}
-.fundtop{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:8px;}
+.fundtop{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 12px;margin-bottom:8px;}
 .fundtop label{margin:0;white-space:nowrap;}
-.fundout{font-family:var(--mono);font-size:13px;color:var(--ink);text-align:right;}
+.fundout{font-family:var(--mono);font-size:13px;color:var(--ink);text-align:right;white-space:nowrap;}
 .anchors{font-family:var(--mono);font-size:11px;letter-spacing:.02em;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between;}
 .deriv{font-size:12px;color:var(--muted);margin-top:8px;}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:22px;}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;}
-.card h3{font-family:var(--head);font-weight:600;font-size:15px;margin:0 0 12px;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;}
+.card h3{font-family:var(--head);font-weight:400;font-size:17px;margin:0 0 12px;}
 .lab{font-size:13px;color:var(--muted);}
-.big{font-family:var(--head);font-size:26px;font-weight:600;letter-spacing:-.01em;margin:2px 0 0;color:var(--ink);}
+.big{font-family:var(--mono);font-size:26px;font-weight:700;letter-spacing:-.02em;margin:2px 0 0;color:var(--ink);}
 .kv{display:flex;justify-content:space-between;margin-top:10px;font-size:13px;gap:10px;}
 .kv span:first-child{color:var(--muted);}
 .fee{font-size:11px;color:var(--muted);}
 .note{font-size:12px;color:var(--muted);margin-top:10px;}
-.verdict{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--deepsea);border-radius:var(--r);padding:12px 16px;font-size:14px;line-height:1.6;color:var(--body);margin-bottom:18px;}
+.verdict{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--ink);border-radius:var(--r);padding:12px 16px;font-size:14px;line-height:1.6;color:var(--body);margin-bottom:18px;}
 .verdict b{color:var(--ink);}
 .legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-bottom:8px;}
 .legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:6px;}
@@ -64,11 +69,11 @@ input[type=range]{width:100%;accent-color:var(--blue);}
 .advhead{font:inherit;font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;gap:6px;}
 .advhead:hover{color:var(--ink);}
 .advgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 18px;margin-top:14px;}
-.advcell .l{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);}
-.advcell .v{font-size:15px;font-weight:500;color:var(--ink);}
+.advcell .l{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.advcell .v{font-family:var(--mono);font-size:14px;color:var(--ink);}
 .advnote{font-size:11px;color:var(--muted);margin-top:14px;}
-.smp{font-family:var(--mono);font-size:9px;letter-spacing:.04em;text-transform:uppercase;color:var(--deepsea);margin-left:5px;}
-.coral{color:var(--deepsea)} .tealc{color:var(--blue)} .warn{color:var(--deepsea)}
+/* The two options: lock now in ink, stake then lock in wine (chart lines match). */
+.coral{color:var(--ink)} .tealc{color:var(--wine)} .warn{color:var(--caution)}
 
 /* Mode toggle: simple "just locking" vs full "stake or lock" comparison. */
 .modes{display:flex;gap:8px;margin:0 0 24px;}
@@ -77,8 +82,8 @@ input[type=range]{width:100%;accent-color:var(--blue);}
 /* Elements only shown in the full comparison mode. */
 .wrap.mode-simple .compare-only{display:none !important;}
 
-/* One consistent section title — Space Grotesk, like the subheading. */
-.stitle{font-family:var(--head);font-size:18px;font-weight:500;color:var(--ink);text-transform:none;letter-spacing:normal;}
+/* One consistent section title, Georgia like the subheading. */
+.stitle{font-family:var(--head);font-size:18px;font-weight:400;color:var(--ink);text-transform:none;letter-spacing:normal;}
 label.stitle{margin-bottom:8px;}
 .modes-title{margin:22px 0 12px;}
 /* Entry point to the standalone lookup page. Deliberately an outline link,
@@ -91,18 +96,18 @@ label.stitle{margin-bottom:8px;}
 .lookup-cta small{display:block;font-family:var(--sans);font-weight:400;font-size:12px;
   color:var(--muted);margin-top:2px;transition:color .12s ease;}
 .lookup-cta__arrow{width:18px;height:18px;flex:none;}
-.lookup-cta:hover{border-color:var(--blue);background:rgba(20,108,147,.04);}
+.lookup-cta:hover{border-color:var(--blue);}
 .lookup-cta:hover small{color:var(--body);}
-.lookup-cta:focus-visible{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(20,108,147,.15);}
+.lookup-cta:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-color:var(--blue);}
 
-/* Brand header: wordmark + title + intro, centered. */
+/* Brand header: wordmark (CoRAL TRIBE, lowercase o for the eye) + title, centered. */
 .brandhead{text-align:center;margin-bottom:22px;}
-.brandhead .logo{font-family:"Coral Tribe",Georgia,serif;font-size:24px;line-height:1;letter-spacing:.06em;color:var(--ink);margin:6px auto 40px;display:block;}
+.brandhead .logo{font-family:"Coral Tribe",Georgia,serif;font-size:24px;line-height:1;letter-spacing:.08em;color:var(--ink);margin:6px auto 40px;display:block;}
 .brandhead h1{margin:0 0 8px;}
-.brandhead .subhead{font-family:var(--head);font-size:18px;font-weight:500;color:var(--ink);margin:0 0 14px;}
+.brandhead .subhead{font-family:var(--head);font-size:18px;font-weight:400;color:var(--ink);margin:0 0 14px;}
 
 /* Collapsible sections + one consistent toggle header (info icon beside title). */
-.info{margin:0 0 22px;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:16px 18px;}
+.info{margin:0 0 22px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);padding:16px 18px;}
 .stoggle{display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:0;cursor:pointer;text-align:left;font:inherit;}
 .stoggle .infoicon{width:17px;height:17px;color:var(--muted);flex:none;transition:color .15s ease;}
 .stoggle:hover .stitle{color:var(--blue);}
@@ -122,11 +127,11 @@ label.stitle{margin-bottom:8px;}
 .breakdown .row{color:var(--muted);}
 .breakdown .row b{color:var(--ink);font-weight:600;}
 .breakdown .eq{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);}
-.breakdown .res{color:var(--deepsea);font-weight:600;white-space:nowrap;}
-.breakdown .split{color:var(--blue);font-weight:600;}
+.breakdown .res{color:var(--ink);font-weight:600;white-space:nowrap;}
+.breakdown .split{color:var(--ink);font-weight:600;}
 
 /* "Recommendation" label above the verdict. */
-.reclabel{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--deepsea);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
+.reclabel{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;}
 
 @media (max-width:520px){
   #stake{flex-wrap:wrap;}
@@ -197,8 +202,8 @@ label.stitle{margin-bottom:8px;}
 <body>
 <div class="wrap mode-simple">
   <header class="brandhead">
-    <div class="logo">CORAL TRIBE</div>
-    <h1>Coral Tribe Points Calculator</h1>
+    <div class="logo">CoRAL TRIBE</div>
+    <h1>Coral Tribe points calculator</h1>
   </header>
 
   <section class="info">
@@ -208,15 +213,15 @@ label.stitle{margin-bottom:8px;}
     </button>
     <div class="info-body" id="fundInfoBody" hidden>
       <p>Coral Tribe has an impact fund that primarily invests via ReFi Hub, a clean energy investment platform. The staking mechanism lives in ReFi Hub.</p>
-      <p>Staking your corals earns you points. Points earn you cash rewards. Lock your Coral NFT with points in the rewards pool to start earning your cash rewards.</p>
+      <p>Staking your Corals earns you points. Points earn you cash rewards. Lock your Coral NFT with points in the rewards pool to start earning your cash rewards.</p>
       <p>For staking and rewards, <a href="https://app.refihub.io/community/" target="_blank" rel="noopener">Visit ReFi Hub</a> and connect your wallet holding your Coral NFTs.</p>
     </div>
   </section>
 
   <div class="stitle modes-title">Select what applies to you</div>
   <div class="modes" id="modes">
-    <button class="btn active" data-m="simple">I'm locking my corals now<small>What you'd earn today</small></button>
-    <button class="btn" data-m="compare">Stake or Lock Corals<small>Compare cash rewards over 24 months</small></button>
+    <button class="btn active" data-m="simple">I'm locking my Corals now<small>What you'd earn today</small></button>
+    <button class="btn" data-m="compare">Stake or lock Corals<small>Compare cash rewards over 24 months</small></button>
   </div>
 
   <a class="lookup-cta" href="my-coral.html" target="_blank" rel="noopener">
@@ -252,7 +257,7 @@ label.stitle{margin-bottom:8px;}
 
   <div class="fund">
     <div class="fundtop">
-      <label class="stitle">Community Fund Deployment</label>
+      <label class="stitle">Community fund deployment</label>
       <span class="fundout" id="fundOut">$288K · today</span>
     </div>
     <div class="anchors"><span id="anchToday">Today $288K</span><span id="anchFull">Fully deployed $507K</span><span id="anchGrowth">Growth $1M</span></div>
@@ -266,11 +271,11 @@ label.stitle{margin-bottom:8px;}
         <p>Coral Tribe runs an impact fund that grows through its investments and community sales revenue, with the community voting on how new capital is deployed.</p>
         <p>Each month the fund's returns are split three ways:</p>
         <ul>
-          <li><b>45%</b> — reinvested to grow the fund</li>
-          <li><b>40%</b> — paid to holders who lock points in the rewards pool</li>
-          <li><b>15%</b> — community fund management fee</li>
+          <li><b>45%</b> reinvested to grow the fund</li>
+          <li><b>40%</b> paid to members who lock points in the rewards pool</li>
+          <li><b>15%</b> community fund management fee</li>
         </ul>
-        <p>Right now the fund earns about <b id="fnGross">$2,705</b> per month; holders receive <b id="fnHolders">$1,082</b> and management <b id="fnMgmt">$406</b>. These move with fund performance.</p>
+        <p>Right now the fund earns about <b id="fnGross">$2,705</b> per month; members receive <b id="fnHolders">$1,082</b> and management <b id="fnMgmt">$406</b>. These move with fund performance.</p>
         <span class="disc">Returns depend on ReFi Hub's asset performance. Nothing is guaranteed.</span>
       </div>
     </div>
@@ -309,8 +314,8 @@ label.stitle{margin-bottom:8px;}
   <div class="verdict compare-only" id="verdict"></div>
 
   <div class="legend compare-only">
-    <span><i style="background:#0e3a5a"></i>Lock now</span>
-    <span><i style="background:#146c93"></i>Stake then lock</span>
+    <span><i style="background:#16120e"></i>Lock now</span>
+    <span><i style="background:#7b2433"></i>Stake then lock</span>
   </div>
   <div class="chartbox compare-only">
     <canvas id="lvs" role="img" aria-label="Cumulative USDC over 24 months, locking now versus staking then locking">Cumulative earnings comparison over two years.</canvas>
@@ -318,14 +323,14 @@ label.stitle{margin-bottom:8px;}
 
   <section class="info">
     <button class="stoggle" aria-controls="advBody" aria-expanded="false">
-      <span class="stitle">Reward Pool details</span>
+      <span class="stitle">Rewards pool details</span>
       <svg class="infoicon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="6.3" r="1.1" fill="currentColor"/><rect x="9" y="8.6" width="2" height="6" rx="1" fill="currentColor"/></svg>
     </button>
     <div id="advBody" hidden>
       <div class="advgrid">
         <div class="advcell"><div class="l">Points in rewards pool</div><div class="v" id="adPool">21,695,562</div></div>
         <div class="advcell"><div class="l">Gross fund yield / mo</div><div class="v" id="adGross">$2,705</div></div>
-        <div class="advcell"><div class="l">To holders (40%)</div><div class="v" id="adDist">$1,082</div></div>
+        <div class="advcell"><div class="l">To members (40%)</div><div class="v" id="adDist">$1,082</div></div>
         <div class="advcell"><div class="l">Compounded (45%)</div><div class="v" id="adCompound">$1,217</div></div>
         <div class="advcell"><div class="l">ReFi Hub fee (15%)</div><div class="v" id="adRhFee">$406</div></div>
         <div class="advcell"><div class="l">Value per 10k points</div><div class="v" id="adPer10k">$0.50</div></div>
@@ -344,11 +349,11 @@ label.stitle{margin-bottom:8px;}
         <div class="advcell"><div class="l">Distributions</div><div class="v" id="adDistN">—</div></div>
         <div class="advcell"><div class="l">Staking wallets</div><div class="v" id="adHolders">—</div></div>
       </div>
-      <div class="advnote">Pool, circulation, staking and distribution numbers come live from the Solana blockchain; the fund figures come from the finance sheet. If either source is briefly unavailable, the page shows the last-known values instead of breaking. ("Staking wallets" counts wallets that have staked — not all Coral owners.)</div>
+      <div class="advnote">Pool, circulation, staking and distribution numbers come live from the Solana blockchain; the fund figures come from the finance sheet. If either source is briefly unavailable, the page shows the last-known values instead of breaking. ("Staking wallets" counts wallets that have staked, not all Coral owners.)</div>
     </div>
   </section>
 
-  <div class="foot" id="foot">Rate uses the live rewards-pool total of 21,695,562 points and today's ~$1,082 monthly holder distribution (40% of ~$2,705 fund yield), scaled by capital deployed at the current ~11% yield. Both connect by API.</div>
+  <div class="foot" id="foot">Rate uses the live rewards-pool total of 21,695,562 points and today's ~$1,082 monthly member distribution (40% of ~$2,705 fund yield), scaled by capital deployed at the current ~11% yield. Both connect by API.</div>
 </div>
 
 <!-- Near-black footer: centered Coral Tribe icon, linking to the main site. -->
@@ -397,7 +402,7 @@ label.stitle{margin-bottom:8px;}
     var padL=48,padR=12,padT=10,padB=34, plotW=w-padL-padR, plotH=h-padT-padB, n=a.length-1;
     var maxV=0; for(var i=0;i<a.length;i++){maxV=Math.max(maxV,a[i],b[i]);}
     var step=niceStep(maxV/4), top=Math.max(step, step*Math.ceil(maxV/step));
-    ctx.font='11px "Space Mono", ui-monospace, monospace'; ctx.fillStyle='#8b857a';
+    ctx.font='11px "Space Mono", ui-monospace, monospace'; ctx.fillStyle='#736d64';
     ctx.strokeStyle='rgba(22,18,14,0.09)'; ctx.lineWidth=1;
     ctx.textAlign='right'; ctx.textBaseline='middle';
     for(var g=0; g<=top+0.001; g+=step){
@@ -413,7 +418,7 @@ label.stitle{margin-bottom:8px;}
       for(var i=0;i<data.length;i++){ var x=padL+(i/n)*plotW, y=padT+plotH-(data[i]/top)*plotH; i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
       ctx.stroke(); ctx.setLineDash([]);
     }
-    line(a,'#0e3a5a'); line(b,'#146c93',[5,4]);
+    line(a,'#16120e'); line(b,'#7b2433',[5,4]);
   }
 
   // ---- verdict copy (numbers come from the calc module) -------------------
@@ -440,7 +445,7 @@ label.stitle{margin-bottom:8px;}
     return '<div class="row">You hold <b>'+fmt(held)+'</b> points → after the 10% lock fee, <b>'+fmt(r.lockedNow)+'</b> are locked.</div>'+
       '<div class="row eq"><b>'+fmt(r.lockedNow)+'</b> ÷ <b>'+fmt(CFG.totalPoolPoints)+'</b> pool points × <b>'+money(r.monthlyDistribution)+'</b> per month = <span class="res">'+moneyP(r.monthlyNow)+' per month</span></div>'+
       '<div class="row eq">Where that comes from: the fund claims ~<b>'+money(r.grossYieldMonthly)+'</b> per month in yield → <span class="split">40% to holders = '+money(r.monthlyDistribution)+'</span> (45% compounds, 15% ReFi Hub).</div>'+
-      '<div class="row" style="margin-top:8px;">Locking pays cash but doesn’t grow your points — only staking adds points.</div>';
+      '<div class="row" style="margin-top:8px;">Locking pays cash but doesn’t grow your points. Only staking adds points.</div>';
   }
 
   // ---- render -------------------------------------------------------------
@@ -468,7 +473,7 @@ label.stitle{margin-bottom:8px;}
     el('fundOut').textContent=cap(deployed)+' · '+zone;
     el('fundOut').className='fundout'+(spec?' warn':'');
 
-    // "How the rewards are funded" toggle — live figures
+    // "How the rewards are funded" toggle: live figures
     el('fnGross').textContent=money(r.grossYieldMonthly);
     el('fnHolders').textContent=money(r.monthlyDistribution);
     el('fnMgmt').textContent=money(r.rhFee);
@@ -502,7 +507,7 @@ label.stitle{margin-bottom:8px;}
     el('anchFull').textContent='Fully deployed '+cap(CFG.fullyDeployed);
     el('anchGrowth').textContent='Growth '+cap(CFG.growthCap);
     var holderToday=CFG.baseGrossMonthly*CFG.holderShare;
-    el('foot').textContent='Rate uses the live rewards-pool total of '+fmt(CFG.totalPoolPoints)+' points and today’s ~'+money(holderToday)+' monthly holder distribution (40% of ~'+money(CFG.baseGrossMonthly)+' fund yield), scaled by capital deployed at the current ~'+pct(CFG.irr)+' yield. Both connect by API.';
+    el('foot').textContent='Rate uses the live rewards-pool total of '+fmt(CFG.totalPoolPoints)+' points and today’s ~'+money(holderToday)+' monthly member distribution (40% of ~'+money(CFG.baseGrossMonthly)+' fund yield), scaled by capital deployed at the current ~'+pct(CFG.irr)+' yield. Both connect by API.';
     renderStats();
   }
 

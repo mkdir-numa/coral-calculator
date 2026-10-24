@@ -55,5 +55,7 @@ Anything that fails to load silently keeps its fallback — the page can never b
 - The footer links back to the **main Coral Tribe site**. They currently point at
   `https://fantastic-dasik-a3eca0.netlify.app/` — update those hrefs in `index.html` when the
   main site moves to a custom domain.
-- Fonts load from Google Fonts as progressive enhancement and degrade to Georgia/system fonts
-  if blocked — nothing the page depends on can fail.
+- Headings use Georgia and text the system Helvetica Neue stack, so nothing to load. The
+  wordmark font (Coral Tribe 1.1) is self-hosted in `assets/fonts/`; Space Mono, for numbers,
+  loads from Google Fonts as progressive enhancement. If either is blocked the page falls back
+  to Georgia or system monospace, so nothing the page depends on can fail. See `STYLE-GUIDE.md`.
