@@ -86,19 +86,20 @@ input[type=range]{width:100%;accent-color:var(--blue);}
 .stitle{font-family:var(--head);font-size:18px;font-weight:400;color:var(--ink);text-transform:none;letter-spacing:normal;}
 label.stitle{margin-bottom:8px;}
 .modes-title{margin:22px 0 12px;}
-/* Entry point to the standalone lookup page. Deliberately an outline link,
-   not a filled .btn, so it never reads as a third calculator mode. */
-.lookup-cta{display:flex;align-items:center;justify-content:space-between;gap:12px;
-  width:100%;margin:0 0 24px;padding:12px 16px;border:1px solid var(--line2);
-  border-radius:var(--r);background:var(--surface);color:var(--blue);
-  font-family:var(--sans);font-size:14px;font-weight:600;text-decoration:none;
-  transition:border-color .12s ease,color .12s ease,background .12s ease;}
-.lookup-cta small{display:block;font-family:var(--sans);font-weight:400;font-size:12px;
-  color:var(--muted);margin-top:2px;transition:color .12s ease;}
-.lookup-cta__arrow{width:18px;height:18px;flex:none;}
-.lookup-cta:hover{border-color:var(--blue);}
-.lookup-cta:hover small{color:var(--body);}
-.lookup-cta:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-color:var(--blue);}
+/* Quick actions: shortcuts for returning members. Outline links, never filled,
+   and shorter than the mode buttons, so they never read as a calculator mode. */
+.qa-label{font-family:var(--sans);font-size:13px;color:var(--muted);margin:0 0 8px;}
+.qa{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 6px;}
+.qa-btn{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:9px 14px;border:1px solid var(--line2);border-radius:var(--r);background:var(--surface);
+  color:var(--blue);font-family:var(--sans);font-size:14px;font-weight:600;line-height:1.35;text-decoration:none;
+  transition:border-color .12s ease,color .12s ease;}
+.qa-btn small{display:block;font-weight:400;font-size:12px;color:var(--muted);margin-top:1px;transition:color .12s ease;}
+.qa-btn svg{width:16px;height:16px;flex:none;}
+.qa-btn:hover{border-color:var(--blue);}
+.qa-btn:hover small{color:var(--body);}
+.qa-btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-color:var(--blue);}
+@media (max-width:640px){ .qa{grid-template-columns:1fr;} }
 
 /* Brand header: wordmark (CoRAL TRIBE, lowercase o for the eye) + title, centered. */
 .brandhead{text-align:center;margin-bottom:22px;}
@@ -203,7 +204,7 @@ label.stitle{margin-bottom:8px;}
 <div class="wrap mode-simple">
   <header class="brandhead">
     <div class="logo">CoRAL TRIBE</div>
-    <h1>Coral Tribe points calculator</h1>
+    <h1>Rewards Calculator</h1>
   </header>
 
   <section class="info">
@@ -218,19 +219,23 @@ label.stitle{margin-bottom:8px;}
     </div>
   </section>
 
+  <div class="qa-label" id="qaLabel">Quick actions</div>
+  <div class="qa" role="group" aria-labelledby="qaLabel">
+    <a class="qa-btn" href="https://app.refihub.io/" target="_blank" rel="noopener" data-track="quick_action_stake_click">
+      <span>Stake &amp; Claim Rewards<small>Opens the ReFi Hub app</small></span>
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4H4v12h12v-4M11 4h5v5M16 4l-7 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a class="qa-btn" href="my-coral.html" target="_blank" rel="noopener" data-track="quick_action_lookup_click">
+      <span>Look up your Coral Points<small>Points, pool share and rewards</small></span>
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5.5 15.5 10 11 14.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+
   <div class="stitle modes-title">Select what applies to you</div>
   <div class="modes" id="modes">
     <button class="btn active" data-m="simple">I'm locking my Corals now<small>What you'd earn today</small></button>
     <button class="btn" data-m="compare">Stake or lock Corals<small>Compare cash rewards over 24 months</small></button>
   </div>
-
-  <a class="lookup-cta" href="my-coral.html" target="_blank" rel="noopener">
-    <span class="lookup-cta__text">
-      Look up my Coral
-      <small>See your points, pool share and rewards</small>
-    </span>
-    <svg class="lookup-cta__arrow" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5.5 15.5 10 11 14.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </a>
 
   <div class="grid">
     <div>
@@ -540,6 +545,7 @@ label.stitle{margin-bottom:8px;}
 
   // ---- wiring -------------------------------------------------------------
   document.querySelectorAll('#modes .btn').forEach(function(b){b.addEventListener('click',function(){setMode(b.getAttribute('data-m'));});});
+  document.querySelectorAll('[data-track]').forEach(function(a){a.addEventListener('click',function(){if(window.ctTrack)window.ctTrack(a.getAttribute('data-track'));});});
   document.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){el('pts').value=c.getAttribute('data-v');compute();});});
   document.querySelectorAll('#stake .btn').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#stake .btn').forEach(function(x){x.classList.remove('active');});b.classList.add('active');key=b.getAttribute('data-k');compute();});});
   ['pts','corals','fund'].forEach(function(id){el(id).addEventListener('input',compute);});
