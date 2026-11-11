@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-10-28T15:43:52.441Z",
-  "totalDistributed": 13647.501121,
-  "distributions": 16,
+  "updatedAt": "2026-11-11T00:27:31.567Z",
+  "totalDistributed": 13754.961002,
+  "distributions": 17,
   "monthly": [
     {
       "month": "2026-03",
@@ -33,7 +33,7 @@
     },
     {
       "month": "2026-10",
-      "amount": 1131.26
+      "amount": 1238.72
     }
   ]
 }
