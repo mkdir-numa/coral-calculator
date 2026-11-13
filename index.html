@@ -265,8 +265,8 @@ label.stitle{margin-bottom:8px;}
       <label class="stitle">Community fund deployment</label>
       <span class="fundout" id="fundOut">$288K · today</span>
     </div>
-    <div class="anchors"><span id="anchToday">Today $288K</span><span id="anchFull">Fully deployed $507K</span><span id="anchGrowth">Growth $1M</span></div>
-    <input type="range" id="fund" min="288000" max="1000000" value="288000" step="1000" />
+    <div class="anchors"><span id="anchToday">Today $288K</span><span id="anchFull">Fully deployed $454K</span><span id="anchGrowth">Growth $1M</span></div>
+    <input type="range" id="fund" min="288398" max="1000000" value="288398" step="1" />
     <div class="info" style="margin-top:14px;">
       <button class="stoggle" aria-controls="fundedBody" aria-expanded="false">
         <span class="stitle">How the rewards are funded</span>
@@ -280,7 +280,7 @@ label.stitle{margin-bottom:8px;}
           <li><b>40%</b> paid to members who lock points in the rewards pool</li>
           <li><b>15%</b> community fund management fee</li>
         </ul>
-        <p>Right now the fund earns about <b id="fnGross">$2,705</b> per month; members receive <b id="fnHolders">$1,082</b> and management <b id="fnMgmt">$406</b>. These move with fund performance.</p>
+        <p>Right now the fund earns about <b id="fnGross">$3,201</b> per month; members receive <b id="fnHolders">$1,280</b> and management <b id="fnMgmt">$480</b>. These move with fund performance.</p>
         <span class="disc">Returns depend on ReFi Hub's asset performance. Nothing is guaranteed.</span>
       </div>
     </div>
@@ -333,15 +333,15 @@ label.stitle{margin-bottom:8px;}
     </button>
     <div id="advBody" hidden>
       <div class="advgrid">
-        <div class="advcell"><div class="l">Points in rewards pool</div><div class="v" id="adPool">21,695,562</div></div>
-        <div class="advcell"><div class="l">Gross fund yield / mo</div><div class="v" id="adGross">$2,705</div></div>
-        <div class="advcell"><div class="l">To members (40%)</div><div class="v" id="adDist">$1,082</div></div>
-        <div class="advcell"><div class="l">Compounded (45%)</div><div class="v" id="adCompound">$1,217</div></div>
-        <div class="advcell"><div class="l">ReFi Hub fee (15%)</div><div class="v" id="adRhFee">$406</div></div>
-        <div class="advcell"><div class="l">Value per 10k points</div><div class="v" id="adPer10k">$0.50</div></div>
-        <div class="advcell"><div class="l">Capital deployed</div><div class="v" id="adDeployed">$288,000</div></div>
-        <div class="advcell"><div class="l">Idle capital</div><div class="v" id="adIdle">$219,000</div></div>
-        <div class="advcell"><div class="l">Current yield</div><div class="v" id="adIrr">11%</div></div>
+        <div class="advcell"><div class="l">Points in rewards pool</div><div class="v" id="adPool">24,783,728</div></div>
+        <div class="advcell"><div class="l">Gross fund yield / mo</div><div class="v" id="adGross">$3,201</div></div>
+        <div class="advcell"><div class="l">To members (40%)</div><div class="v" id="adDist">$1,280</div></div>
+        <div class="advcell"><div class="l">Compounded (45%)</div><div class="v" id="adCompound">$1,440</div></div>
+        <div class="advcell"><div class="l">ReFi Hub fee (15%)</div><div class="v" id="adRhFee">$480</div></div>
+        <div class="advcell"><div class="l">Value per 10k points</div><div class="v" id="adPer10k">$0.52</div></div>
+        <div class="advcell"><div class="l">Capital deployed</div><div class="v" id="adDeployed">$288,398</div></div>
+        <div class="advcell"><div class="l">Idle capital</div><div class="v" id="adIdle">$165,739</div></div>
+        <div class="advcell"><div class="l">Current yield</div><div class="v" id="adIrr">13%</div></div>
         <div class="advcell"><div class="l">Points in circulation</div><div class="v" id="adCirc">—</div></div>
         <div class="advcell"><div class="l">% of points locked</div><div class="v" id="adPctLocked">—</div></div>
         <div class="advcell"><div class="l">Daily points emitted</div><div class="v" id="adEmission">—</div></div>
@@ -354,11 +354,11 @@ label.stitle{margin-bottom:8px;}
         <div class="advcell"><div class="l">Distributions</div><div class="v" id="adDistN">—</div></div>
         <div class="advcell"><div class="l">Staking wallets</div><div class="v" id="adHolders">—</div></div>
       </div>
-      <div class="advnote">Pool, circulation, staking and distribution numbers come live from the Solana blockchain; the fund figures come from the finance sheet. If either source is briefly unavailable, the page shows the last-known values instead of breaking. ("Staking wallets" counts wallets that have staked, not all Coral owners.)</div>
+      <div class="advnote">Pool, circulation, staking and distribution numbers come live from the Solana blockchain; the fund's monthly yield is worked out from the last three payouts to members, idle capital from the live Community Fund, and capital deployed from the finance sheet. If any source is briefly unavailable, the page shows the last-known values instead of breaking. ("Staking wallets" counts wallets that have staked, not all Coral owners.)</div>
     </div>
   </section>
 
-  <div class="foot" id="foot">Rate uses the live rewards-pool total of 21,695,562 points and today's ~$1,082 monthly member distribution (40% of ~$2,705 fund yield), scaled by capital deployed at the current ~11% yield. Both connect by API.</div>
+  <div class="foot" id="foot">Rate uses the live rewards-pool total of 24,783,728 points and today's ~$1,280 monthly member distribution (40% of ~$3,201 fund yield), scaled by capital deployed at the current ~13% yield. Both connect by API.</div>
 </div>
 
 <!-- Near-black footer: centered Coral Tribe icon, linking to the main site. -->
@@ -473,7 +473,9 @@ label.stitle{margin-bottom:8px;}
     el('bTitle').textContent='Stake '+r.tierLabel+', then lock';
     el('bNote').textContent=(key==='flex'?'Flexible staking (3/day), unstake anytime. ':'')+'No cash for '+r.stakeMonths+' months while points grow. Earn cash when you lock your points.';
 
-    var spec=deployed>FULL;
+    // FULL comes from the live fund, so it rarely sits on the slider's $1,000 steps:
+    // within $500 either side reads as fully deployed, not speculative.
+    var spec=deployed>FULL+500;
     var zone=deployed<=CFG.baseCap+500?'today':(spec?'speculative':(deployed>=FULL-500&&deployed<=FULL+500?'fully deployed':'deploying'));
     el('fundOut').textContent=cap(deployed)+' · '+zone;
     el('fundOut').className='fundout'+(spec?' warn':'');

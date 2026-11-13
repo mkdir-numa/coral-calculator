@@ -13,7 +13,11 @@
  * so the same code runs in the browser and under `node calc.test.js`. The HTML
  * page and the tests both import this, so the numbers can't silently drift.
  *
- * Worked examples it must reproduce (see coral-rewards-math.md):
+ * The figures move with the fund (config.js loads them live); today, 13 Nov 2026:
+ *   gross fund yield ~= $3,201/mo -> 40% = ~$1,280/mo to holders
+ *
+ * Worked examples from coral-rewards-math.md (Sept 2026 figures, kept for the
+ * shape of the maths):
  *   gross fund yield ~= $2,705/mo -> 40% = ~$1,082/mo to holders today
  *   rate ~= $0.50 per 10,000 points / month
  *   new buyer (0 held, 1 coral, 12-mo): ~4,900 locked, ~$0.25/mo, ~$3/yr
@@ -33,13 +37,13 @@
   };
 
   var DEFAULT_CONFIG = {
-    totalPoolPoints: 21695562.31, // denominator: points LOCKED in the pool, not network total
-    baseGrossMonthly: 2705,    // total yield the fund claims per month at baseCap (trailing 6-mo actual)
+    totalPoolPoints: 24783727.92, // denominator: points LOCKED in the pool, not network total
+    baseGrossMonthly: 3201,    // total yield the fund claims per month at baseCap (last 3 payouts / 40%)
     holderShare: 0.40,         // 40% of each claim is distributed to holders
     rhFeeShare: 0.15,          // 15% to ReFi Hub OpEx
     compoundShare: 0.45,       // 45% compounds back into the fund
-    baseCap: 288000,           // capital deployed today; anchors the fund slider
-    fullyDeployed: 507000,     // idle cash put to work; honest ceiling before "growth"
+    baseCap: 288398,           // capital deployed today; anchors the fund slider
+    fullyDeployed: 454137,     // today's capital + cash and SOL not yet in a project (live in config.js)
     irr: 0.14,                 // display-only fallback; the app derives current yield live (config.js)
     lockFee: 0.10,             // 10% taken off points at lock
     months: 24                 // comparison horizon for the chart and totals

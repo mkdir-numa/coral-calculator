@@ -14,20 +14,24 @@
 (function (root) {
   'use strict';
 
-  // Today's figures. These are the fallbacks AND the initial render values.
+  // Today's figures (13 Nov 2026). These are the fallbacks AND the initial render
+  // values; the live sources below replace them within a second.
   var FALLBACK = {
-    totalPoolPoints: 21695562.31, // rewards-pool API. Points LOCKED in the pool only,
+    totalPoolPoints: 24783727.92, // on-chain (stats.json). Points LOCKED in the pool only,
                                // NOT total network points. This is the denominator.
-    grossMonthly: 2705,        // total yield the fund CLAIMS per month (trailing 6-mo actual,
-                               // on-chain). Holders get 40% of this -> ~$1,082/mo today.
-    capitalDeployed: 288000    // fund / ReFi Hub. Drives the fund slider's "today" anchor.
+    grossMonthly: 3201,        // total yield the fund CLAIMS per month, worked back from what
+                               // members were actually paid: the last three monthly payouts
+                               // ($1,301, $1,301, $1,239) average $1,280, which is the 40%.
+    capitalDeployed: 288398,   // invested in the energy projects (FITs at face). Drives the
+                               // fund slider's "today" anchor and the yield.
+    fullyDeployed: 454137      // capitalDeployed + everything not yet in a project (cash and
+                               // SOL), from the Members Club's /api/fund. Moves with SOL.
     // (No irr fallback: the current yield is DERIVED as grossMonthly*12/capitalDeployed,
     //  unless the feed supplies an explicit irr. See buildConfig.)
   };
 
   // Fixed reference points (not live feeds): slider anchors, split, and protocol rules.
   var CONSTANTS = {
-    fullyDeployed: 507000, // honest ceiling once idle cash is deployed
     growthCap: 1000000,    // speculative growth anchor
     lockFee: 0.10,         // 10% fee on points at lock
     months: 24,            // comparison horizon
@@ -46,6 +50,17 @@
   // NOTE: grossMonthly is the total fund yield BEFORE the 45/40/15 split; the
   // calculator applies the 40% holder share itself.
   var FEED_URL = 'https://script.google.com/macros/s/AKfycbyT82AHrGh8Z42ja1o9nGECgTcQM-eMkIhtI2uytTwEw0BtFCVN8H1wmm0aak-gaOxz/exec';
+
+  // The monthly payouts to members (distributions.mjs). The fund's monthly yield is
+  // worked back from them: average of the last PAYOUT_MONTHS payouts / holderShare.
+  // Real payouts beat the hand-kept sheet figure, so this wins when it loads.
+  var DISTRIBUTIONS_URL = 'distributions.json';
+  var PAYOUT_MONTHS = 3;
+
+  // The live Community Fund (the same numbers the website and the Members Club show).
+  // Everything that is not yet in an energy project (cash ready to deploy + SOL) is
+  // what "fully deployed" would add to today's capital.
+  var FUND_URL = 'https://members.coraltribe.io/api/fund';
 
   // Live on-chain aggregates written by the snapshotter (snapshot.mjs). Supplies
   // the true rewards-pool total (GlobalState.total_locked_points) plus the pool
@@ -72,16 +87,46 @@
    * any field the feed omits or that fails to load falls back to TODAY's figure.
    * The resolved object is ready to hand to CoralCalc.computeRewards, plus anchors.
    */
+  function getJSON(url, opts) {
+    if (!url) return Promise.resolve(null);
+    return fetch(url, opts || {})
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; });
+  }
+
+  // Monthly gross yield from the last few real payouts, or null if there are too
+  // few to trust. Payouts are the 40% slice, so divide by the holder share.
+  function grossFromPayouts(dist) {
+    var months = dist && dist.monthly;
+    if (!months || !months.length) return null;
+    var recent = months.slice(-PAYOUT_MONTHS).map(function (m) { return Number(m.amount); })
+      .filter(function (v) { return isFinite(v) && v > 0; });
+    if (recent.length < PAYOUT_MONTHS) return null;
+    var avg = recent.reduce(function (a, b) { return a + b; }, 0) / recent.length;
+    return avg / CONSTANTS.holderShare;
+  }
+
+  // Cash ready to deploy + SOL, from the live fund; null if it looks wrong.
+  function undeployedFromFund(fund) {
+    var rows = (fund && fund.rows) || [];
+    var pick = function (key) {
+      for (var i = 0; i < rows.length; i++) if (rows[i].key === key) return Number(rows[i].value);
+      return NaN;
+    };
+    var v = pick('ready') + pick('sol');
+    return (isFinite(v) && v >= 0 && v < 1e8) ? v : null;
+  }
+
   function loadConfig() {
     if (typeof fetch === 'undefined') return Promise.resolve(defaultConfig());
-    var feedP = FEED_URL
-      ? fetch(FEED_URL).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
-      : Promise.resolve({});
-    var statsP = STATS_URL
-      ? fetch(STATS_URL, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
-      : Promise.resolve(null);
-    return Promise.all([feedP, statsP]).then(function (res) {
-      var json = res[0] || {}, stats = res[1] || null;
+    var noStore = { cache: 'no-store' };
+    return Promise.all([
+      getJSON(FEED_URL),
+      getJSON(STATS_URL, noStore),
+      getJSON(DISTRIBUTIONS_URL, noStore),
+      getJSON(FUND_URL)
+    ]).then(function (res) {
+      var json = res[0] || {}, stats = res[1] || null, dist = res[2], fund = res[3];
       var live = {};
       ['totalPoolPoints', 'grossMonthly', 'capitalDeployed', 'irr'].forEach(function (k) {
         var v = readField(json, k);
@@ -91,6 +136,14 @@
       if (stats && typeof stats.poolPoints === 'number' && isFinite(stats.poolPoints)) {
         live.totalPoolPoints = stats.poolPoints;
       }
+      // What members were actually paid wins over the sheet's yield figure.
+      var gross = grossFromPayouts(dist);
+      if (gross != null) live.grossMonthly = gross;
+      // Fully deployed = today's capital + whatever is not in a project yet.
+      var undeployed = undeployedFromFund(fund);
+      live.fullyDeployed = (undeployed != null)
+        ? live.capitalDeployed + undeployed
+        : Math.max(FALLBACK.fullyDeployed, live.capitalDeployed);
       return buildConfig(live, stats);
     });
   }
@@ -116,8 +169,8 @@
       holderShare: CONSTANTS.holderShare,
       rhFeeShare: CONSTANTS.rhFeeShare,
       compoundShare: CONSTANTS.compoundShare,
+      fullyDeployed: live.fullyDeployed,
       // fixed
-      fullyDeployed: CONSTANTS.fullyDeployed,
       growthCap: CONSTANTS.growthCap,
       lockFee: CONSTANTS.lockFee,
       months: CONSTANTS.months,
@@ -130,6 +183,8 @@
     FALLBACK: FALLBACK,
     CONSTANTS: CONSTANTS,
     FEED_URL: FEED_URL,
+    grossFromPayouts: grossFromPayouts,
+    undeployedFromFund: undeployedFromFund,
     loadConfig: loadConfig,
     defaultConfig: defaultConfig
   };

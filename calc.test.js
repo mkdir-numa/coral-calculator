@@ -5,8 +5,8 @@
  * numbers can't silently drift. If a formula changes and these still need to pass,
  * the math doc must change too.
  *
- * Model: the fund claims gross yield (~$2,705/mo today) and splits it 45 / 40 / 15.
- * Holders get the 40% slice -> ~$1,082/mo, which is the distribution the pool pays.
+ * Model: the fund claims gross yield (~$3,201/mo today) and splits it 45 / 40 / 15.
+ * Holders get the 40% slice -> ~$1,280/mo, which is the distribution the pool pays.
  */
 var assert = require('assert');
 var Calc = require('./calc.js');
@@ -23,41 +23,49 @@ function near(actual, expected, tol, msg) {
     (msg || '') + ' expected ~' + expected + ', got ' + actual);
 }
 
-var cfg = Config.defaultConfig(); // today: 21,695,562 pts, $2,705 gross/mo, $288K, 40/15/45
+var cfg = Config.defaultConfig(); // today: 24,783,728 pts, $3,201 gross/mo, $288K, 40/15/45
+
+// The maths doc's worked examples were written against the September figures
+// (21,695,562 pool points, $2,705/mo gross, $288K deployed). They are checked
+// against those fixed figures, so the doc stays true while today's defaults move.
+var docCfg = Object.assign({}, cfg, {
+  totalPoolPoints: 21695562.31, grossMonthly: 2705, baseGrossMonthly: 2705,
+  capitalDeployed: 288000, baseCap: 288000
+});
 
 console.log('coral calculator — worked examples (coral-rewards-math.md)');
 
-test('gross fund yield ~$2,705/mo splits 45/40/15; holders get ~$1,082/mo', function () {
+test('gross fund yield ~$3,201/mo splits 45/40/15; holders get ~$1,280/mo', function () {
   var r = Calc.computeRewards({ heldPoints: 0, corals: 1, tier: 'y1' }, cfg);
-  near(r.grossYieldMonthly, 2705, 0.5, 'gross yield');
-  near(r.monthlyDistribution, 1082, 0.5, 'holder distribution (40%)');
-  near(r.rhFee, 405.75, 0.5, 'ReFi Hub fee (15%)');
-  near(r.compound, 1217.25, 0.5, 'compounded back (45%)');
+  near(r.grossYieldMonthly, 3201, 0.5, 'gross yield');
+  near(r.monthlyDistribution, 1280.4, 0.5, 'holder distribution (40%)');
+  near(r.rhFee, 480.15, 0.5, 'ReFi Hub fee (15%)');
+  near(r.compound, 1440.45, 0.5, 'compounded back (45%)');
   // the split must reconstitute the gross exactly
   near(r.monthlyDistribution + r.rhFee + r.compound, r.grossYieldMonthly, 1e-6, 'split sums to gross');
 });
 
 test('rate is about $0.50 per 10,000 points per month', function () {
-  var r = Calc.computeRewards({ heldPoints: 0, corals: 1, tier: 'y1' }, cfg);
+  var r = Calc.computeRewards({ heldPoints: 0, corals: 1, tier: 'y1' }, docCfg);
   near(r.ratePer10k, 0.50, 0.01, 'value per 10k points');
 });
 
 test('new buyer: 1 Coral staked 12 months -> ~4,900 locked, ~$0.25/mo, ~$3/yr', function () {
-  var r = Calc.computeRewards({ heldPoints: 0, corals: 1, tier: 'y1' }, cfg);
+  var r = Calc.computeRewards({ heldPoints: 0, corals: 1, tier: 'y1' }, docCfg);
   near(r.lockedLater, 4900, 30, 'points locked after fee');   // 5475 * 0.9 = 4927.5
   near(r.monthlyLater, 0.25, 0.01, 'per month once locked');
   near(r.yearlyLater, 3, 0.5, 'per year');
 });
 
 test('holder: 100,000 points -> 90,000 locked, ~$4.52/mo, ~$54/yr', function () {
-  var r = Calc.computeRewards({ heldPoints: 100000, corals: 1, tier: 'y1' }, cfg);
+  var r = Calc.computeRewards({ heldPoints: 100000, corals: 1, tier: 'y1' }, docCfg);
   near(r.lockedNow, 90000, 0.5, 'points locked after fee');
   near(r.monthlyNow, 4.52, 0.1, 'per month');
   near(r.yearlyNow, 54, 1, 'per year');
 });
 
 test('OG: 1,000,000 points -> 900,000 locked, ~$45/mo, ~$542/yr', function () {
-  var r = Calc.computeRewards({ heldPoints: 1000000, corals: 1, tier: 'y1' }, cfg);
+  var r = Calc.computeRewards({ heldPoints: 1000000, corals: 1, tier: 'y1' }, docCfg);
   near(r.lockedNow, 900000, 0.5, 'points locked after fee');
   near(r.monthlyNow, 45.2, 1, 'per month');
   near(r.yearlyNow, 542, 5, 'per year');
@@ -119,14 +127,29 @@ test('series: lock-now pays from month 1; stake-lock is zero until staking ends'
 });
 
 test('fallback config equals today\'s published figures', function () {
-  assert.strictEqual(cfg.totalPoolPoints, 21695562.31);
-  assert.strictEqual(cfg.baseGrossMonthly, 2705);
+  assert.strictEqual(cfg.totalPoolPoints, 24783727.92);
+  assert.strictEqual(cfg.baseGrossMonthly, 3201);
   assert.strictEqual(cfg.holderShare, 0.40);
   assert.strictEqual(cfg.rhFeeShare, 0.15);
   assert.strictEqual(cfg.compoundShare, 0.45);
-  assert.strictEqual(cfg.baseCap, 288000);
-  // irr is derived as grossMonthly*12/capitalDeployed (~11.3%), not a fixed constant
-  assert.strictEqual(cfg.irr, 2705 * 12 / 288000);
+  assert.strictEqual(cfg.baseCap, 288398);
+  assert.strictEqual(cfg.fullyDeployed, 454137);
+  // irr is derived as grossMonthly*12/capitalDeployed (~13.3%), not a fixed constant
+  assert.strictEqual(cfg.irr, 3201 * 12 / 288398);
+});
+
+test('fund yield is worked back from the last three payouts (the 40% slice)', function () {
+  var dist = { monthly: [{ amount: 2751 }, { amount: 1301 }, { amount: 1301 }, { amount: 1238.72 }] };
+  near(Config.grossFromPayouts(dist), (1301 + 1301 + 1238.72) / 3 / 0.40, 1e-9, 'gross from payouts');
+  assert.strictEqual(Config.grossFromPayouts({ monthly: [{ amount: 1000 }] }), null, 'too few months');
+  assert.strictEqual(Config.grossFromPayouts(null), null, 'no feed');
+});
+
+test('fully deployed adds the live fund\'s cash and SOL to today\'s capital', function () {
+  var fund = { rows: [{ key: 'solar', value: 259587 }, { key: 'ready', value: 50251 }, { key: 'sol', value: 115488 }] };
+  assert.strictEqual(Config.undeployedFromFund(fund), 165739);
+  assert.strictEqual(Config.undeployedFromFund({ rows: [] }), null, 'missing rows');
+  assert.strictEqual(Config.undeployedFromFund(null), null, 'no feed');
 });
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
