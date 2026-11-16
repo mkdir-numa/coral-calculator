@@ -1,7 +1,7 @@
 {
-  "updatedAt": "2026-11-15T11:15:01.095Z",
+  "updatedAt": "2026-11-16T11:46:23.332Z",
   "poolPoints": 24783727.92,
-  "circulation": 38657974.26,
+  "circulation": 38663711.66,
   "pctLocked": 64.1,
   "rewardsDistributed": 13754.961002,
   "distributions": 17,
@@ -14,5 +14,5 @@
   "lockedInPool": 1392,
   "emissionPerDay": 26253,
   "holders": 147,
-  "coralsWithPoints": 2645
+  "coralsWithPoints": 2646
 }
