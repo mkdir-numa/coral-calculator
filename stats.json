@@ -1,10 +1,10 @@
 {
-  "updatedAt": "2026-11-26T12:53:21.147Z",
+  "updatedAt": "2026-11-27T12:53:01.748Z",
   "poolPoints": 24783727.92,
   "circulation": 38728232.74,
   "pctLocked": 64,
-  "rewardsDistributed": 13754.961002,
-  "distributions": 17,
+  "rewardsDistributed": 14785.780821,
+  "distributions": 18,
   "stakedTotal": 2513,
   "perTier": {
     "Flexible": 920,
